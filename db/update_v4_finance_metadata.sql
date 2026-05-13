@@ -7,25 +7,25 @@ CREATE TABLE IF NOT EXISTS app_metadata (
     data JSONB NOT NULL
 );
 
--- Configuración de tasas de cambio (incluyendo Euro BCV)
+-- Configuración de tasas de cambio (Estructura de 5 recuadros para Layout 2 y 3)
 INSERT INTO app_metadata (id, data) VALUES
 ('rate_configs', '[
   { "key": "usd_bs", "label": "Dólar Paralelo", "suffix": "Bs", "emoji": "🇺🇸", "color": "#10b981", "autoFetch": true, "sublabel": "Monitor Dólar" },
   { "key": "usd_bs_bcv", "label": "Dólar BCV", "suffix": "Bs", "emoji": "🏛️", "color": "#3b82f6", "autoFetch": true, "sublabel": "Tasa Oficial" },
   { "key": "eur_bs_bcv", "label": "Euro BCV", "suffix": "Bs", "emoji": "🇪🇺", "color": "#f59e0b", "autoFetch": true, "sublabel": "Tasa Oficial" },
   { "key": "usd_cop", "label": "Peso Colombiano", "suffix": "COP", "emoji": "🇨🇴", "color": "#fbbf24", "optional": true, "sublabel": "1 USD = X COP" },
-  { "key": "usdt_bs", "label": "USDT Binance", "suffix": "Bs", "emoji": "🪙", "color": "#f59e0b", "optional": true, "sublabel": "P2P Promedio" }
+  { "key": "bs_cop", "label": "Pesos a BS", "suffix": "COP", "emoji": "💱", "color": "#ec4899", "optional": true, "sublabel": "1 Bs = X COP" }
 ]')
 ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data;
 
--- Monedas soportadas en la app
+-- Monedas para menús desplegables en calculadoras y transacciones
 INSERT INTO app_metadata (id, data) VALUES
 ('currencies', '[
-  { "id": "USD", "symbol": "$", "name": "Dólar USD", "emoji": "💵" },
-  { "id": "BS", "symbol": "Bs", "name": "Bolívar", "emoji": "🇻🇪" },
-  { "id": "COP", "symbol": "$", "name": "Peso COP", "emoji": "🇨🇴" },
-  { "id": "EUR", "symbol": "€", "name": "Euro", "emoji": "💶" },
-  { "id": "USDT", "symbol": "₮", "name": "USDT", "emoji": "🪙" }
+  { "id": "USD", "value": "USD", "symbol": "$", "name": "Dólar USD", "label": "🇺🇸 USD ($)", "emoji": "💵" },
+  { "id": "BS_P", "value": "BS_P", "symbol": "Bs", "name": "Bolívar Paralelo", "label": "🇻🇪 Bs Paralelo", "emoji": "🇻🇪" },
+  { "id": "BS_BCV", "value": "BS_BCV", "symbol": "Bs", "name": "Bolívar BCV", "label": "🏛️ Bs BCV", "emoji": "🏛️" },
+  { "id": "COP", "value": "COP", "symbol": "$", "name": "Peso COP", "label": "🇨🇴 COP ($)", "emoji": "🇨🇴" },
+  { "id": "USDT", "value": "USDT", "symbol": "₮", "name": "USDT", "label": "🪙 USDT", "emoji": "🪙" }
 ]')
 ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data;
 
