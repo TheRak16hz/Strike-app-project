@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Wallet, Dumbbell, Settings, Plus } from 'lucide-react';
+import { Home, Wallet, Dumbbell, Settings, Plus, Apple, Moon } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../context/AuthContext';
 import './BottomNav.css';
@@ -15,6 +15,8 @@ export default function BottomNav({ onNewHabitClick, onFinanceAction }) {
   const isHabits = location.pathname === '/';
   const isFinance = location.pathname === '/finance';
   const isTraining = location.pathname === '/training';
+  const isNutrition = location.pathname === '/nutrition';
+  const isSleep = location.pathname === '/sleep';
   const isSettings = location.pathname === '/settings';
 
   const handleFloatingAction = () => {
@@ -57,6 +59,20 @@ export default function BottomNav({ onNewHabitClick, onFinanceAction }) {
         >
           <Dumbbell size={20} />
           <span>Gym</span>
+        </button>
+        <button 
+          className={`bottom-nav-item ${isNutrition ? 'active' : ''}`}
+          onClick={() => navigate('/nutrition')}
+        >
+          <Apple size={20} />
+          <span>Dieta</span>
+        </button>
+        <button 
+          className={`bottom-nav-item ${isSleep ? 'active' : ''}`}
+          onClick={() => navigate('/sleep')}
+        >
+          <Moon size={20} />
+          <span>Sueño</span>
         </button>
         <button 
           className={`bottom-nav-item ${isSettings ? 'active' : ''}`}

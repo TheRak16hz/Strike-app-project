@@ -12,7 +12,7 @@ export default function GoalFormModal({
 
   return (
     <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(10px)' }}>
-      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '2.5rem' }} onSubmit={onSubmit}>
+      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto' }} onSubmit={onSubmit}>
          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
             <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>{editingItem ? 'Editar Meta' : 'Nueva Meta'}</h2>
             <div style={{ padding: '0.8rem', background: newGoal.color || 'var(--primary)', borderRadius: '15px', fontSize: '1.5rem', color: '#fff' }}>

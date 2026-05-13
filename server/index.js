@@ -6,6 +6,8 @@ const habitRoutes = require('./routes/habits');
 const authRoutes = require('./routes/auth');
 const financeRoutes = require('./routes/finance');
 const trainingRoutes = require('./routes/training');
+const nutritionRoutes = require('./routes/nutrition');
+const sleepRoutes = require('./routes/sleep');
 
 const db = require('./db');
 
@@ -242,6 +244,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/training', trainingRoutes);
+app.use('/api/nutrition', nutritionRoutes);
+app.use('/api/sleep', sleepRoutes);
 
 // Servir archivos estáticos del cliente (Vite dist) para producción/fallback
 app.use(express.static(path.join(__dirname, '../client/dist')));

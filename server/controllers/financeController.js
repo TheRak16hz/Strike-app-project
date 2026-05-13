@@ -41,7 +41,7 @@ exports.fetchLiveRates = async (req, res) => {
   try {
     const settingsResult = await db.query('SELECT settings FROM user_settings WHERE user_id = $1', [req.user.id]);
     const currentSettings = settingsResult.rows[0]?.settings || {};
-    const defaultRates = { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648 };
+    const defaultRates = { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648, eur_bs_bcv: 570 };
     const currentRates = currentSettings.exchange_rates || defaultRates;
 
     // Check cache: only fetch if last_live_fetch was > 24h ago (user-triggered button)
@@ -57,9 +57,10 @@ exports.fetchLiveRates = async (req, res) => {
       });
     }
 
-    const [bcvData, paraleloData] = await Promise.allSettled([
+    const [bcvData, paraleloData, euroBcvData] = await Promise.allSettled([
       fetchJSON('https://ve.dolarapi.com/v1/dolares/oficial'),
       fetchJSON('https://ve.dolarapi.com/v1/dolares/paralelo'),
+      fetchJSON('https://ve.dolarapi.com/v1/euros/oficial'),
     ]);
 
     const newRates = { ...currentRates };
@@ -73,6 +74,11 @@ exports.fetchLiveRates = async (req, res) => {
     if (paraleloData.status === 'fulfilled' && paraleloData.value?.promedio) {
       newRates.usd_bs = parseFloat(paraleloData.value.promedio.toFixed(2));
       updates.paralelo = { value: newRates.usd_bs, date: paraleloData.value.fechaActualizacion };
+    }
+
+    if (euroBcvData.status === 'fulfilled' && euroBcvData.value?.promedio) {
+      newRates.eur_bs_bcv = parseFloat(euroBcvData.value.promedio.toFixed(2));
+      updates.eur_bcv = { value: newRates.eur_bs_bcv, date: euroBcvData.value.fechaActualizacion };
     }
 
     newRates.last_live_fetch = new Date().toISOString();

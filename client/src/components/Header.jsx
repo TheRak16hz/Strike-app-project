@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { 
-  Activity, Settings, Bell, BellOff, Wallet, Home, Plus, Dumbbell
+  Activity, Settings, Bell, BellOff, Wallet, Home, Plus, Dumbbell, Apple, Moon
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -15,6 +15,9 @@ export default function Header({ onNewHabitClick, onFinanceAction }) {
 
   const isFinance = location.pathname === '/finance';
   const isHabits = location.pathname === '/';
+  const isTraining = location.pathname === '/training';
+  const isNutrition = location.pathname === '/nutrition';
+  const isSleep = location.pathname === '/sleep';
 
   return (
     <header className="app-header animate-slide" style={{ 
@@ -64,12 +67,34 @@ export default function Header({ onNewHabitClick, onFinanceAction }) {
               onClick={() => navigate('/training')}
               style={{ 
                 display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.75rem', borderRadius: '8px',
-                background: location.pathname === '/training' ? 'var(--primary)' : 'transparent',
-                color: location.pathname === '/training' ? 'white' : 'var(--text-secondary)',
+                background: isTraining ? 'var(--primary)' : 'transparent',
+                color: isTraining ? 'white' : 'var(--text-secondary)',
                 fontWeight: 600, fontSize: '0.85rem'
               }}
             >
               <Dumbbell size={16} /> Gym
+            </button>
+            <button 
+              onClick={() => navigate('/nutrition')}
+              style={{ 
+                display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.75rem', borderRadius: '8px',
+                background: isNutrition ? 'var(--primary)' : 'transparent',
+                color: isNutrition ? 'white' : 'var(--text-secondary)',
+                fontWeight: 600, fontSize: '0.85rem'
+              }}
+            >
+              <Apple size={16} /> Dieta
+            </button>
+            <button 
+              onClick={() => navigate('/sleep')}
+              style={{ 
+                display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.75rem', borderRadius: '8px',
+                background: isSleep ? 'var(--primary)' : 'transparent',
+                color: isSleep ? 'white' : 'var(--text-secondary)',
+                fontWeight: 600, fontSize: '0.85rem'
+              }}
+            >
+              <Moon size={16} /> Sueño
             </button>
           </nav>
         )}

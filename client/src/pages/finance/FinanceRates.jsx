@@ -178,16 +178,18 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
           </div>
         )}
 
-        {/* Cards grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-          {rateConfigs.map(cfg => {
+        {/* Cards grid (2+3 Layout) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1rem' }}>
+          {rateConfigs.map((cfg, idx) => {
             const isEditing = editingKey === cfg.key;
             const value = rates[cfg.key];
+            const span = idx < 2 ? 'span 3' : 'span 2'; // First 2 span 3 cols (2 per row), next 3 span 2 cols (3 per row)
             return (
               <div
                 key={cfg.key}
                 className="glass-panel"
                 style={{
+                  gridColumn: span,
                   padding: '1.2rem',
                   border: `1px solid ${cfg.color}22`,
                   background: `linear-gradient(135deg, ${cfg.color}0d, transparent)`,

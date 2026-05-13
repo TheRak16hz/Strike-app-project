@@ -12,6 +12,8 @@ import Register from './pages/Register';
 import Settings from './pages/Settings';
 import Finance from './pages/Finance';
 import Training from './pages/Training';
+import Nutrition from './pages/Nutrition';
+import Sleep from './pages/Sleep';
 import BottomNav from './components/BottomNav';
 import { useTheme } from './hooks/useTheme';
 import { useNotifications } from './hooks/useNotifications';
@@ -621,6 +623,8 @@ export default function App() {
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/finance" element={<Finance />} />
                   <Route path="/training" element={<Training />} />
+                  <Route path="/nutrition" element={<Nutrition />} />
+                  <Route path="/sleep" element={<Sleep />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
                 <BottomNav 
