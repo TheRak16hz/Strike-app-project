@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { X } from 'lucide-react';
 
 export default function GoalFormModal({ 
   show, 
@@ -13,11 +14,16 @@ export default function GoalFormModal({
   return (
     <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
       <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }} onSubmit={onSubmit}>
-         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>{editingItem ? 'Editar Meta' : 'Nueva Meta'}</h2>
-            <div style={{ padding: '0.8rem', background: newGoal.color || 'var(--primary)', borderRadius: '15px', fontSize: '1.5rem', color: '#fff' }}>
-               {newGoal.icon || '🎯'}
+         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+               <div style={{ padding: '0.6rem', background: newGoal.color || 'var(--primary)', borderRadius: '12px', fontSize: '1.2rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', boxSizing: 'border-box' }}>
+                  {newGoal.icon || '🎯'}
+               </div>
+               <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900 }}>{editingItem ? 'Editar Meta' : 'Nueva Meta'}</h2>
             </div>
+            <button type="button" onClick={onClose} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer', flexShrink: 0 }}>
+               <X size={18} />
+            </button>
          </div>
 
          <div className="form-group" style={{ marginBottom: '1.5rem', minWidth: 0 }}>

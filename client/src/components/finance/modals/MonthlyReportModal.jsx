@@ -37,7 +37,9 @@ export default function MonthlyReportModal({ show, onClose, transactions, totals
              <div style={{ padding: '0.6rem', background: 'rgba(var(--primary-rgb), 0.1)', borderRadius: '12px' }}><FileText size={20} color="var(--primary)" /></div>
              <h2 style={{ margin: 0, fontSize: '1.4rem', textTransform: 'capitalize' }}>Reporte {currentMonth}</h2>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#fff' }}><X size={24} /></button>
+          <button type="button" onClick={onClose} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer', flexShrink: 0 }}>
+             <X size={18} />
+          </button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
