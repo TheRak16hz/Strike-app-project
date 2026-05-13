@@ -24,7 +24,8 @@ INSERT INTO app_metadata (id, data) VALUES
   { "id": "USD", "value": "USD", "symbol": "$", "name": "Dólar USD", "label": "🇺🇸 USD ($)", "emoji": "💵" },
   { "id": "BS_P", "value": "BS_P", "symbol": "Bs", "name": "Bolívar Paralelo", "label": "🇻🇪 Bs Paralelo", "emoji": "🇻🇪" },
   { "id": "BS_BCV", "value": "BS_BCV", "symbol": "Bs", "name": "Bolívar BCV", "label": "🏛️ Bs BCV", "emoji": "🏛️" },
-  { "id": "COP", "value": "COP", "symbol": "$", "name": "Peso COP", "label": "🇨🇴 COP ($)", "emoji": "🇨🇴" }
+  { "id": "COP", "value": "COP", "symbol": "$", "name": "Peso COP", "label": "🇨🇴 COP ($)", "emoji": "🇨🇴" },
+  { "id": "EUR", "value": "EUR", "symbol": "€", "name": "Euro BCV", "label": "🇪🇺 Euro BCV (€)", "emoji": "💶" }
 ]')
 ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data;
 

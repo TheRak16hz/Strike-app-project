@@ -13,14 +13,14 @@ function calcConversion(amount, from, to, rates) {
   const val = Number(amount);
   const usd_bs   = Number(rates.usd_bs   || 648);
   const usd_bscv = Number(rates.usd_bs_bcv || 474);
+  const eur_bscv = Number(rates.eur_bs_bcv || 570);
   const usd_cop  = Number(rates.usd_cop  || 4200);
   const bs_cop   = Number(rates.bs_cop   || 5);
-  const usdt_bs  = Number(rates.usdt_bs  || usd_bs); // treat USDT ≈ USD if not set
 
   // Convert FROM → USD (pivot)
   let usd = 0;
-  if (from === 'USD')    usd = val;
-  else if (from === 'USDT')   usd = val * usd_bs / usdt_bs; // USDT via Bs
+  if (from === 'USD')         usd = val;
+  else if (from === 'EUR')    usd = val * (eur_bscv / usd_bscv); // 1 EUR = (eur_bs / usd_bs) USD
   else if (from === 'BS_P')   usd = val / usd_bs;
   else if (from === 'BS_BCV') usd = val / usd_bscv;
   else if (from === 'COP')    usd = val / usd_cop;
@@ -30,11 +30,16 @@ function calcConversion(amount, from, to, rates) {
   if (from === 'COP' && to === 'BS_P')   return fmt(val / bs_cop);
   if (from === 'BS_BCV' && to === 'COP') return fmt(val * bs_cop);
   if (from === 'COP' && to === 'BS_BCV') return fmt(val / bs_cop);
+  
+  // Direct BCV Cross Rates for Euro <-> Bolivares (BCV oficial)
+  if (from === 'EUR' && to === 'BS_BCV') return fmt(val * eur_bscv);
+  if (from === 'BS_BCV' && to === 'EUR') return fmt(val / eur_bscv);
+  if (from === 'EUR' && to === 'BS_P')   return fmt(val * eur_bscv);
 
   // Convert USD → TO
   let result = 0;
   if (to === 'USD')      result = usd;
-  else if (to === 'USDT')    result = usd * usdt_bs / usd_bs;
+  else if (to === 'EUR')     result = usd * (usd_bscv / eur_bscv);
   else if (to === 'BS_P')    result = usd * usd_bs;
   else if (to === 'BS_BCV')  result = usd * usd_bscv;
   else if (to === 'COP')     result = usd * usd_cop;
