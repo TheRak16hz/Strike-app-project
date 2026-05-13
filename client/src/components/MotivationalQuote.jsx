@@ -34,6 +34,7 @@ const QUOTES = {
   ]
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const getQuote = (progress, hour) => {
   if (progress >= 100) return QUOTES.completed[Math.floor(Math.random() * QUOTES.completed.length)];
   if (progress >= 70) return QUOTES.high_progress[Math.floor(Math.random() * QUOTES.high_progress.length)];

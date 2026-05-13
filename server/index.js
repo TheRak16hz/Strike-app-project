@@ -19,224 +19,224 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Database Migrations (Sequenced)
-const runMigrations = async () => {
-  try {
-    await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;');
-    await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "tags" TEXT DEFAULT \'\';');
-    await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "is_one_time" BOOLEAN DEFAULT FALSE;');
-    await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "reminder_date" DATE;');
+// // Database Migrations (Sequenced)
+// const runMigrations = async () => {
+//   try {
+//     await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "position" INTEGER DEFAULT 0;');
+//     await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "tags" TEXT DEFAULT \'\';');
+//     await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "is_one_time" BOOLEAN DEFAULT FALSE;');
+//     await db.query('ALTER TABLE habits ADD COLUMN IF NOT EXISTS "reminder_date" DATE;');
 
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS savings_goals (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        title TEXT NOT NULL,
-        target_amount DECIMAL(12, 2) NOT NULL,
-        current_amount DECIMAL(12, 2) DEFAULT 0,
-        deadline DATE,
-        color TEXT DEFAULT 'var(--primary)',
-        icon TEXT DEFAULT '💰',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS savings_goals (
+//         id SERIAL PRIMARY KEY,
+//         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//         title TEXT NOT NULL,
+//         target_amount DECIMAL(12, 2) NOT NULL,
+//         current_amount DECIMAL(12, 2) DEFAULT 0,
+//         deadline DATE,
+//         color TEXT DEFAULT 'var(--primary)',
+//         icon TEXT DEFAULT '💰',
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS transactions (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        type TEXT CHECK (type IN ('income', 'expense', 'saving')) NOT NULL,
-        amount DECIMAL(12, 2) NOT NULL,
-        currency TEXT DEFAULT 'USD',
-        category TEXT NOT NULL,
-        description TEXT,
-        date DATE DEFAULT CURRENT_DATE,
-        goal_id INTEGER REFERENCES savings_goals(id) ON DELETE SET NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS transactions (
+//         id SERIAL PRIMARY KEY,
+//         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//         type TEXT CHECK (type IN ('income', 'expense', 'saving')) NOT NULL,
+//         amount DECIMAL(12, 2) NOT NULL,
+//         currency TEXT DEFAULT 'USD',
+//         category TEXT NOT NULL,
+//         description TEXT,
+//         date DATE DEFAULT CURRENT_DATE,
+//         goal_id INTEGER REFERENCES savings_goals(id) ON DELETE SET NULL,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    await db.query('ALTER TABLE transactions ADD COLUMN IF NOT EXISTS "currency" TEXT DEFAULT \'USD\';');
-    await db.query('ALTER TABLE transactions ADD COLUMN IF NOT EXISTS "source" TEXT;');
+//     await db.query('ALTER TABLE transactions ADD COLUMN IF NOT EXISTS "currency" TEXT DEFAULT \'USD\';');
+//     await db.query('ALTER TABLE transactions ADD COLUMN IF NOT EXISTS "source" TEXT;');
 
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS user_settings (
-        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-        settings JSONB DEFAULT '{}',
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS user_settings (
+//         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+//         settings JSONB DEFAULT '{}',
+//         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    // --- APP METADATA ---
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS app_metadata (
-        id VARCHAR(50) PRIMARY KEY,
-        data JSONB NOT NULL,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     // --- APP METADATA ---
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS app_metadata (
+//         id VARCHAR(50) PRIMARY KEY,
+//         data JSONB NOT NULL,
+//         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    // Seed App Metadata
-    const checkMetadata = await db.query('SELECT COUNT(*) FROM app_metadata');
-    if (parseInt(checkMetadata.rows[0].count) === 0) {
-      const financeCategories = [
-        { id: 'Salario', label: 'Salario', icon: '💰', color: '#10b981' },
-        { id: 'Comida', label: 'Comida', icon: '🍲', color: '#f59e0b' },
-        { id: 'Transporte', label: 'Transporte', icon: '🚗', color: '#3b82f6' },
-        { id: 'Vivienda', label: 'Vivienda', icon: '🏠', color: '#8b5cf6' },
-        { id: 'Servicios', label: 'Servicios', icon: '⚡', color: '#ec4899' },
-        { id: 'Salud', label: 'Salud', icon: '🏥', color: '#ef4444' },
-        { id: 'Ocio', label: 'Ocio', icon: '🎮', color: '#8b5cf6' },
-        { id: 'Compras', label: 'Compras', icon: '🛍️', color: '#3b82f6' },
-        { id: 'Ahorro', label: 'Ahorro', icon: '🏦', color: 'var(--primary)' },
-        { id: 'Educación', label: 'Educación', icon: '🎓', color: '#f59e0b' },
-        { id: 'Otros', label: 'Otros', icon: '✨', color: '#6b7280' }
-      ];
+//     // Seed App Metadata
+//     const checkMetadata = await db.query('SELECT COUNT(*) FROM app_metadata');
+//     if (parseInt(checkMetadata.rows[0].count) === 0) {
+//       const financeCategories = [
+//         { id: 'Salario', label: 'Salario', icon: '💰', color: '#10b981' },
+//         { id: 'Comida', label: 'Comida', icon: '🍲', color: '#f59e0b' },
+//         { id: 'Transporte', label: 'Transporte', icon: '🚗', color: '#3b82f6' },
+//         { id: 'Vivienda', label: 'Vivienda', icon: '🏠', color: '#8b5cf6' },
+//         { id: 'Servicios', label: 'Servicios', icon: '⚡', color: '#ec4899' },
+//         { id: 'Salud', label: 'Salud', icon: '🏥', color: '#ef4444' },
+//         { id: 'Ocio', label: 'Ocio', icon: '🎮', color: '#8b5cf6' },
+//         { id: 'Compras', label: 'Compras', icon: '🛍️', color: '#3b82f6' },
+//         { id: 'Ahorro', label: 'Ahorro', icon: '🏦', color: 'var(--primary)' },
+//         { id: 'Educación', label: 'Educación', icon: '🎓', color: '#f59e0b' },
+//         { id: 'Otros', label: 'Otros', icon: '✨', color: '#6b7280' }
+//       ];
 
-      const rateConfigs = [
-        { key: 'usd_bs_bcv', label: 'BCV', sublabel: 'USD → Bs', emoji: '🏛️', description: 'Tasa oficial del Banco Central de Venezuela', color: '#60a5fa', autoFetch: true, suffix: 'Bs' },
-        { key: 'usd_bs', label: 'Paralelo', sublabel: 'USD / USDT → Bs', emoji: '📈', description: 'Dólar paralelo — promedio P2P de mercado', color: '#c084fc', autoFetch: true, suffix: 'Bs' },
-        { key: 'bs_cop', label: 'Bs → COP', sublabel: '1 Bs en pesos', emoji: '🔁', description: 'Cambio de calle: bolívares a pesos colombianos', color: '#f97316', autoFetch: false, suffix: 'COP' },
-        { key: 'usd_cop', label: 'USD → COP', sublabel: '1 dólar en pesos', emoji: '🇨🇴', description: 'Promedio estándar USD a peso colombiano', color: '#34d399', autoFetch: false, suffix: 'COP' }
-      ];
+//       const rateConfigs = [
+//         { key: 'usd_bs_bcv', label: 'BCV', sublabel: 'USD → Bs', emoji: '🏛️', description: 'Tasa oficial del Banco Central de Venezuela', color: '#60a5fa', autoFetch: true, suffix: 'Bs' },
+//         { key: 'usd_bs', label: 'Paralelo', sublabel: 'USD / USDT → Bs', emoji: '📈', description: 'Dólar paralelo — promedio P2P de mercado', color: '#c084fc', autoFetch: true, suffix: 'Bs' },
+//         { key: 'bs_cop', label: 'Bs → COP', sublabel: '1 Bs en pesos', emoji: '🔁', description: 'Cambio de calle: bolívares a pesos colombianos', color: '#f97316', autoFetch: false, suffix: 'COP' },
+//         { key: 'usd_cop', label: 'USD → COP', sublabel: '1 dólar en pesos', emoji: '🇨🇴', description: 'Promedio estándar USD a peso colombiano', color: '#34d399', autoFetch: false, suffix: 'COP' }
+//       ];
 
-      const currencies = [
-        { value: 'USD', label: 'USD 🇺🇸', name: 'Dólar' },
-        { value: 'BS_P', label: 'Bs Paralelo', name: 'Bolívar paralelo' },
-        { value: 'BS_BCV', label: 'Bs BCV', name: 'Bolívar BCV' },
-        { value: 'COP', label: 'COP 🇨🇴', name: 'Peso colombiano' }
-      ];
+//       const currencies = [
+//         { value: 'USD', label: 'USD 🇺🇸', name: 'Dólar' },
+//         { value: 'BS_P', label: 'Bs Paralelo', name: 'Bolívar paralelo' },
+//         { value: 'BS_BCV', label: 'Bs BCV', name: 'Bolívar BCV' },
+//         { value: 'COP', label: 'COP 🇨🇴', name: 'Peso colombiano' }
+//       ];
 
-      await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['finance_categories', JSON.stringify(financeCategories)]);
-      await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['rate_configs', JSON.stringify(rateConfigs)]);
-      await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['currencies', JSON.stringify(currencies)]);
-      console.log('📚 Metadata inicial insertada en BD.');
-    }
+//       await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['finance_categories', JSON.stringify(financeCategories)]);
+//       await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['rate_configs', JSON.stringify(rateConfigs)]);
+//       await db.query('INSERT INTO app_metadata (id, data) VALUES ($1, $2)', ['currencies', JSON.stringify(currencies)]);
+//       console.log('📚 Metadata inicial insertada en BD.');
+//     }
 
-    // --- TRAINING TRACKER TABLES (v3 - Enhanced Categories) ---
-    // 1. Exercise Library Catalog (Enhanced)
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS exercises_library (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE,
-        zone TEXT NOT NULL, -- e.g., 'Tren Superior', 'Tren Inferior', 'Core'
-        muscle TEXT NOT NULL, -- e.g., 'Pecho', 'Glúteos'
-        equipment TEXT NOT NULL, -- e.g., 'Peso Corporal', 'Mancuernas', 'Banda'
-        is_compound BOOLEAN DEFAULT FALSE,
-        calories_per_rep DECIMAL(8, 2) DEFAULT 0.5,
-        description TEXT,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NULL -- If NULL, it's a global preset.
-      );
-    `);
+//     // --- TRAINING TRACKER TABLES (v3 - Enhanced Categories) ---
+//     // 1. Exercise Library Catalog (Enhanced)
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS exercises_library (
+//         id SERIAL PRIMARY KEY,
+//         name TEXT NOT NULL UNIQUE,
+//         zone TEXT NOT NULL, -- e.g., 'Tren Superior', 'Tren Inferior', 'Core'
+//         muscle TEXT NOT NULL, -- e.g., 'Pecho', 'Glúteos'
+//         equipment TEXT NOT NULL, -- e.g., 'Peso Corporal', 'Mancuernas', 'Banda'
+//         is_compound BOOLEAN DEFAULT FALSE,
+//         calories_per_rep DECIMAL(8, 2) DEFAULT 0.5,
+//         description TEXT,
+//         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NULL -- If NULL, it's a global preset.
+//       );
+//     `);
 
-    // Seed Initial Exercises
-    const checkLibrary = await db.query('SELECT COUNT(*) FROM exercises_library');
-    if (parseInt(checkLibrary.rows[0].count) === 0) {
-      const initialExercises = [
-        // Name, Zone, Muscle, Equipment, Is_Compound, Calories, Description
+//     // Seed Initial Exercises
+//     const checkLibrary = await db.query('SELECT COUNT(*) FROM exercises_library');
+//     if (parseInt(checkLibrary.rows[0].count) === 0) {
+//       const initialExercises = [
+//         // Name, Zone, Muscle, Equipment, Is_Compound, Calories, Description
         
-        // --- Peso Corporal (Calistenia) ---
-        ['Flexiones (Push-ups)', 'Tren Superior', 'Pecho', 'Peso Corporal', true, 0.5, 'Flexiones de pecho regulares, activa pectorales, hombros y tríceps.'],
-        ['Flexiones Declinadas', 'Tren Superior', 'Pecho', 'Peso Corporal', true, 0.6, 'Pies elevados en una silla o banco, mayor énfasis en pecho superior y hombros.'],
-        ['Fondos (Dips)', 'Tren Superior', 'Tríceps', 'Peso Corporal', true, 0.8, 'Fondos en paralelas o apoyando manos atrás en una silla. Trabaja tríceps y pecho inferior.'],
-        ['Dominadas (Pull-ups)', 'Tren Superior', 'Espalda', 'Peso Corporal', true, 1.0, 'Agarre prono, manos separadas. Excelente para amplitud de espalda (dorsales).'],
-        ['Dominadas Supinas (Chin-ups)', 'Tren Superior', 'Espalda', 'Peso Corporal', true, 1.0, 'Agarre supino. Involucra fuertemente los bíceps además de la espalda.'],
+//         // --- Peso Corporal (Calistenia) ---
+//         ['Flexiones (Push-ups)', 'Tren Superior', 'Pecho', 'Peso Corporal', true, 0.5, 'Flexiones de pecho regulares, activa pectorales, hombros y tríceps.'],
+//         ['Flexiones Declinadas', 'Tren Superior', 'Pecho', 'Peso Corporal', true, 0.6, 'Pies elevados en una silla o banco, mayor énfasis en pecho superior y hombros.'],
+//         ['Fondos (Dips)', 'Tren Superior', 'Tríceps', 'Peso Corporal', true, 0.8, 'Fondos en paralelas o apoyando manos atrás en una silla. Trabaja tríceps y pecho inferior.'],
+//         ['Dominadas (Pull-ups)', 'Tren Superior', 'Espalda', 'Peso Corporal', true, 1.0, 'Agarre prono, manos separadas. Excelente para amplitud de espalda (dorsales).'],
+//         ['Dominadas Supinas (Chin-ups)', 'Tren Superior', 'Espalda', 'Peso Corporal', true, 1.0, 'Agarre supino. Involucra fuertemente los bíceps además de la espalda.'],
         
-        ['Sentadillas (Squats)', 'Tren Inferior', 'Piernas', 'Peso Corporal', true, 0.4, 'Sentadillas libres bajando por debajo del paralelo. Activa cuádriceps y glúteos.'],
-        ['Zancadas (Lunges)', 'Tren Inferior', 'Piernas', 'Peso Corporal', true, 0.5, 'Zancadas alternas paso a paso. Requiere equilibrio y trabaja toda la pierna.'],
-        ['Sentadilla Búlgara', 'Tren Inferior', 'Glúteos', 'Peso Corporal', true, 0.6, 'Sentadilla a una pierna con pie trasero elevado. Ideal para glúteo y cuádriceps.'],
-        ['Puente de Glúteo', 'Tren Inferior', 'Glúteos', 'Peso Corporal', false, 0.3, 'Elevación de pelvis acostado boca arriba. Foco directo en contracción de glúteos.'],
-        ['Elevación de Talones', 'Tren Inferior', 'Pantorrillas', 'Peso Corporal', false, 0.2, 'Elevaciones sobre puntas de los pies en un escalón.'],
+//         ['Sentadillas (Squats)', 'Tren Inferior', 'Piernas', 'Peso Corporal', true, 0.4, 'Sentadillas libres bajando por debajo del paralelo. Activa cuádriceps y glúteos.'],
+//         ['Zancadas (Lunges)', 'Tren Inferior', 'Piernas', 'Peso Corporal', true, 0.5, 'Zancadas alternas paso a paso. Requiere equilibrio y trabaja toda la pierna.'],
+//         ['Sentadilla Búlgara', 'Tren Inferior', 'Glúteos', 'Peso Corporal', true, 0.6, 'Sentadilla a una pierna con pie trasero elevado. Ideal para glúteo y cuádriceps.'],
+//         ['Puente de Glúteo', 'Tren Inferior', 'Glúteos', 'Peso Corporal', false, 0.3, 'Elevación de pelvis acostado boca arriba. Foco directo en contracción de glúteos.'],
+//         ['Elevación de Talones', 'Tren Inferior', 'Pantorrillas', 'Peso Corporal', false, 0.2, 'Elevaciones sobre puntas de los pies en un escalón.'],
 
-        ['Plancha Isométrica (Seg)', 'Core', 'Abdomen', 'Peso Corporal', true, 0.05, '1 Repetición = 1 Segundo. Postura de plancha apretando todo el cuerpo.'],
-        ['Crunch Abdominal', 'Core', 'Abdomen', 'Peso Corporal', false, 0.2, 'Elevación corta de tronco acostado boca arriba.'],
-        ['Elevación de Piernas', 'Core', 'Abdomen', 'Peso Corporal', false, 0.3, 'Acostado o colgado, elevación de ambas piernas rectas. Trabaja zona inferior.'],
+//         ['Plancha Isométrica (Seg)', 'Core', 'Abdomen', 'Peso Corporal', true, 0.05, '1 Repetición = 1 Segundo. Postura de plancha apretando todo el cuerpo.'],
+//         ['Crunch Abdominal', 'Core', 'Abdomen', 'Peso Corporal', false, 0.2, 'Elevación corta de tronco acostado boca arriba.'],
+//         ['Elevación de Piernas', 'Core', 'Abdomen', 'Peso Corporal', false, 0.3, 'Acostado o colgado, elevación de ambas piernas rectas. Trabaja zona inferior.'],
         
-        // --- Mancuernas (Dumbbells) ---
-        ['Press de Banca', 'Tren Superior', 'Pecho', 'Mancuernas', true, 0.6, 'Press acostado con mancuernas para pecho.'],
-        ['Aperturas (Flyes)', 'Tren Superior', 'Pecho', 'Mancuernas', false, 0.4, 'Aperturas acostado, movimiento de aislamiento para pectorales.'],
-        ['Press Militar (Hombros)', 'Tren Superior', 'Hombros', 'Mancuernas', true, 0.5, 'Press sobre la cabeza sentado o de pie.'],
-        ['Elevaciones Laterales', 'Tren Superior', 'Hombros', 'Mancuernas', false, 0.3, 'Vuelos laterales con brazos ligeramente flexionados para deltoides medio.'],
-        ['Pájaros (Deltoides Post)', 'Tren Superior', 'Hombros', 'Mancuernas', false, 0.3, 'Elevaciones laterales inclinado hacia adelante. Posterior del hombro.'],
-        ['Remo con Mancuerna', 'Tren Superior', 'Espalda', 'Mancuernas', true, 0.5, 'Remo a una mano apoyado en banco/silla. Fuerza dorsal.'],
-        ['Encogimientos (Trapecios)', 'Tren Superior', 'Espalda', 'Mancuernas', false, 0.3, 'Elevación de hombros sosteniendo peso.'],
-        ['Curl de Bíceps', 'Tren Superior', 'Bíceps', 'Mancuernas', false, 0.3, 'Curl alterno o al mismo tiempo. Aislamiento para brazo.'],
-        ['Curl Martillo', 'Tren Superior', 'Bíceps', 'Mancuernas', false, 0.3, 'Agarre neutro. Foco en braquial y antebrazo.'],
-        ['Extensión de Tríceps', 'Tren Superior', 'Tríceps', 'Mancuernas', false, 0.3, 'Copa a dos manos sobre la cabeza o patada de tríceps.'],
+//         // --- Mancuernas (Dumbbells) ---
+//         ['Press de Banca', 'Tren Superior', 'Pecho', 'Mancuernas', true, 0.6, 'Press acostado con mancuernas para pecho.'],
+//         ['Aperturas (Flyes)', 'Tren Superior', 'Pecho', 'Mancuernas', false, 0.4, 'Aperturas acostado, movimiento de aislamiento para pectorales.'],
+//         ['Press Militar (Hombros)', 'Tren Superior', 'Hombros', 'Mancuernas', true, 0.5, 'Press sobre la cabeza sentado o de pie.'],
+//         ['Elevaciones Laterales', 'Tren Superior', 'Hombros', 'Mancuernas', false, 0.3, 'Vuelos laterales con brazos ligeramente flexionados para deltoides medio.'],
+//         ['Pájaros (Deltoides Post)', 'Tren Superior', 'Hombros', 'Mancuernas', false, 0.3, 'Elevaciones laterales inclinado hacia adelante. Posterior del hombro.'],
+//         ['Remo con Mancuerna', 'Tren Superior', 'Espalda', 'Mancuernas', true, 0.5, 'Remo a una mano apoyado en banco/silla. Fuerza dorsal.'],
+//         ['Encogimientos (Trapecios)', 'Tren Superior', 'Espalda', 'Mancuernas', false, 0.3, 'Elevación de hombros sosteniendo peso.'],
+//         ['Curl de Bíceps', 'Tren Superior', 'Bíceps', 'Mancuernas', false, 0.3, 'Curl alterno o al mismo tiempo. Aislamiento para brazo.'],
+//         ['Curl Martillo', 'Tren Superior', 'Bíceps', 'Mancuernas', false, 0.3, 'Agarre neutro. Foco en braquial y antebrazo.'],
+//         ['Extensión de Tríceps', 'Tren Superior', 'Tríceps', 'Mancuernas', false, 0.3, 'Copa a dos manos sobre la cabeza o patada de tríceps.'],
         
-        ['Goblet Squat (Mancuerna)', 'Tren Inferior', 'Piernas', 'Mancuernas', true, 0.5, 'Sentadilla sosteniendo peso frente al pecho. Mayor estabilidad.'],
-        ['Peso Muerto Rumano', 'Tren Inferior', 'Femorales', 'Mancuernas', true, 0.6, 'Flexión de cadera con piernas semi-rectas. Isquiotibiales y glúteos.'],
-        ['Zancadas con Mancuernas', 'Tren Inferior', 'Piernas', 'Mancuernas', true, 0.6, 'Zancadas sosteniendo el peso a los lados para mayor resistencia.']
-      ];
+//         ['Goblet Squat (Mancuerna)', 'Tren Inferior', 'Piernas', 'Mancuernas', true, 0.5, 'Sentadilla sosteniendo peso frente al pecho. Mayor estabilidad.'],
+//         ['Peso Muerto Rumano', 'Tren Inferior', 'Femorales', 'Mancuernas', true, 0.6, 'Flexión de cadera con piernas semi-rectas. Isquiotibiales y glúteos.'],
+//         ['Zancadas con Mancuernas', 'Tren Inferior', 'Piernas', 'Mancuernas', true, 0.6, 'Zancadas sosteniendo el peso a los lados para mayor resistencia.']
+//       ];
       
-      for (const ex of initialExercises) {
-        await db.query(`
-          INSERT INTO exercises_library (name, zone, muscle, equipment, is_compound, calories_per_rep, description)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-          ON CONFLICT (name) DO NOTHING
-        `, ex);
-      }
-      console.log('📚 Librería de ejercicios inicializada (Categorías Mejoradas).');
-    }
+//       for (const ex of initialExercises) {
+//         await db.query(`
+//           INSERT INTO exercises_library (name, zone, muscle, equipment, is_compound, calories_per_rep, description)
+//           VALUES ($1, $2, $3, $4, $5, $6, $7)
+//           ON CONFLICT (name) DO NOTHING
+//         `, ex);
+//       }
+//       console.log('📚 Librería de ejercicios inicializada (Categorías Mejoradas).');
+//     }
 
-    // 2. Scheduled Routines
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS workout_routines (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        name TEXT NOT NULL,
-        days JSONB DEFAULT '[]',
-        color TEXT DEFAULT 'var(--primary)',
-        icon TEXT DEFAULT '💪',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     // 2. Scheduled Routines
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS workout_routines (
+//         id SERIAL PRIMARY KEY,
+//         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//         name TEXT NOT NULL,
+//         days JSONB DEFAULT '[]',
+//         color TEXT DEFAULT 'var(--primary)',
+//         icon TEXT DEFAULT '💪',
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    // 3. Exercises within a Routine
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS routine_exercises (
-        id SERIAL PRIMARY KEY,
-        routine_id INTEGER REFERENCES workout_routines(id) ON DELETE CASCADE,
-        exercise_library_id INTEGER REFERENCES exercises_library(id) ON DELETE CASCADE,
-        target_sets INTEGER NOT NULL DEFAULT 3,
-        target_reps INTEGER NOT NULL DEFAULT 10,
-        target_weight DECIMAL(8, 2) DEFAULT 0, -- 0 for bodyweight
-        order_index INTEGER DEFAULT 0
-      );
-    `);
+//     // 3. Exercises within a Routine
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS routine_exercises (
+//         id SERIAL PRIMARY KEY,
+//         routine_id INTEGER REFERENCES workout_routines(id) ON DELETE CASCADE,
+//         exercise_library_id INTEGER REFERENCES exercises_library(id) ON DELETE CASCADE,
+//         target_sets INTEGER NOT NULL DEFAULT 3,
+//         target_reps INTEGER NOT NULL DEFAULT 10,
+//         target_weight DECIMAL(8, 2) DEFAULT 0, -- 0 for bodyweight
+//         order_index INTEGER DEFAULT 0
+//       );
+//     `);
 
-    // 4. Workout Logs (Daily completion)
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS workout_logs (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        routine_id INTEGER REFERENCES workout_routines(id) ON DELETE SET NULL,
-        date DATE DEFAULT CURRENT_DATE,
-        total_calories_burned DECIMAL(8, 2) DEFAULT 0,
-        perceived_effort INTEGER DEFAULT 5, -- Scale 1-10
-        notes TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+//     // 4. Workout Logs (Daily completion)
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS workout_logs (
+//         id SERIAL PRIMARY KEY,
+//         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//         routine_id INTEGER REFERENCES workout_routines(id) ON DELETE SET NULL,
+//         date DATE DEFAULT CURRENT_DATE,
+//         total_calories_burned DECIMAL(8, 2) DEFAULT 0,
+//         perceived_effort INTEGER DEFAULT 5, -- Scale 1-10
+//         notes TEXT,
+//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//       );
+//     `);
 
-    // 5. Exercises actually performed in the log
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS workout_log_exercises (
-        id SERIAL PRIMARY KEY,
-        log_id INTEGER REFERENCES workout_logs(id) ON DELETE CASCADE,
-        routine_exercise_id INTEGER REFERENCES routine_exercises(id) ON DELETE SET NULL,
-        actual_sets INTEGER NOT NULL,
-        actual_reps INTEGER NOT NULL,
-        actual_weight DECIMAL(8, 2) DEFAULT 0
-      );
-    `);
-    console.log('✅ Migraciones completadas exitosamente.');
-  } catch (err) {
-    console.error('❌ Error en migraciones:', err);
-  }
-};
+//     // 5. Exercises actually performed in the log
+//     await db.query(`
+//       CREATE TABLE IF NOT EXISTS workout_log_exercises (
+//         id SERIAL PRIMARY KEY,
+//         log_id INTEGER REFERENCES workout_logs(id) ON DELETE CASCADE,
+//         routine_exercise_id INTEGER REFERENCES routine_exercises(id) ON DELETE SET NULL,
+//         actual_sets INTEGER NOT NULL,
+//         actual_reps INTEGER NOT NULL,
+//         actual_weight DECIMAL(8, 2) DEFAULT 0
+//       );
+//     `);
+//     console.log('✅ Migraciones completadas exitosamente.');
+//   } catch (err) {
+//     console.error('❌ Error en migraciones:', err);
+//   }
+// };
 
-runMigrations();
+// runMigrations();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/habits', habitRoutes);
