@@ -11,8 +11,8 @@ export default function GoalFormModal({
   if (!show) return null;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(10px)' }}>
-      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto' }} onSubmit={onSubmit}>
+    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
+      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }} onSubmit={onSubmit}>
          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
             <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>{editingItem ? 'Editar Meta' : 'Nueva Meta'}</h2>
             <div style={{ padding: '0.8rem', background: newGoal.color || 'var(--primary)', borderRadius: '15px', fontSize: '1.5rem', color: '#fff' }}>
@@ -20,19 +20,19 @@ export default function GoalFormModal({
             </div>
          </div>
 
-         <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+         <div className="form-group" style={{ marginBottom: '1.5rem', minWidth: 0 }}>
            <label>Nombre de la Meta</label>
-           <input type="text" value={newGoal.title} onChange={e => setNewGoal({...newGoal, title: e.target.value})} placeholder="Ej: Viaje a Japón, Nueva PC..." required />
+           <input type="text" value={newGoal.title} onChange={e => setNewGoal({...newGoal, title: e.target.value})} placeholder="Ej: Viaje a Japón, Nueva PC..." required style={{ width: '100%', boxSizing: 'border-box' }} />
          </div>
 
-         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-           <div className="form-group">
+         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+           <div className="form-group" style={{ minWidth: 0 }}>
              <label>Monto Objetivo (USD)</label>
-             <input type="number" value={newGoal.target_amount} onChange={e => setNewGoal({...newGoal, target_amount: e.target.value})} placeholder="0.00" required />
+             <input type="number" value={newGoal.target_amount} onChange={e => setNewGoal({...newGoal, target_amount: e.target.value})} placeholder="0.00" required style={{ width: '100%', boxSizing: 'border-box' }} />
            </div>
-           <div className="form-group">
+           <div className="form-group" style={{ minWidth: 0 }}>
              <label>Fecha Límite (Opcional)</label>
-             <input type="date" value={newGoal.deadline || ''} onChange={e => setNewGoal({...newGoal, deadline: e.target.value})} />
+             <input type="date" value={newGoal.deadline || ''} onChange={e => setNewGoal({...newGoal, deadline: e.target.value})} style={{ width: '100%', boxSizing: 'border-box' }} />
            </div>
          </div>
 

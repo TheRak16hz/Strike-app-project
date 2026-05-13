@@ -18,8 +18,8 @@ export default function GoalAdjustModal({
   const usdPreview = (parseFloat(adjustData.amount) || 0) / currentRate;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(10px)' }}>
-      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '400px', padding: '2rem' }}>
+    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
+      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '400px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
           <h2 style={{ margin: 0, fontSize: '1.2rem' }}>Ajustar Reserva</h2>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#fff' }}><X size={20} /></button>
@@ -34,20 +34,20 @@ export default function GoalAdjustModal({
           <button onClick={() => setAdjustType('remove')} style={{ flex: 1, padding: '0.6rem', borderRadius: '10px', border: 'none', background: adjustType === 'remove' ? '#3b82f6' : 'transparent', color: '#fff', fontSize: '0.75rem', fontWeight: 700 }}>Retirar</button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="form-group">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label>Moneda</label>
-            <select value={adjustData.currency} onChange={e => setAdjustData({...adjustData, currency: e.target.value})}>
-              <option value="USD">USD</option>
-              <option value="BS">BS (Paralelo)</option>
-              <option value="BS_BCV">BS (BCV)</option>
-              <option value="COP">COP</option>
-              <option value="USDT">USDT</option>
+            <select value={adjustData.currency} onChange={e => setAdjustData({...adjustData, currency: e.target.value})} style={{ width: '100%', boxSizing: 'border-box' }}>
+              <option value="USD">🇺🇸 USD</option>
+              <option value="BS_P">🇻🇪 Bs (Paralelo)</option>
+              <option value="BS_BCV">🏛️ Bs (BCV)</option>
+              <option value="COP">🇨🇴 COP</option>
+              <option value="EUR">🇪🇺 EUR</option>
             </select>
           </div>
-          <div className="form-group">
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label>Monto</label>
-            <input type="number" value={adjustData.amount} onChange={e => setAdjustData({...adjustData, amount: e.target.value})} placeholder="0.00" step="0.01" required />
+            <input type="number" value={adjustData.amount} onChange={e => setAdjustData({...adjustData, amount: e.target.value})} placeholder="0.00" step="0.01" required style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
         </div>
 

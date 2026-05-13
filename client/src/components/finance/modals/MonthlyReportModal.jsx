@@ -30,8 +30,8 @@ export default function MonthlyReportModal({ show, onClose, transactions, totals
     : 0;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1002, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(15px)' }}>
-      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '600px', padding: '2.5rem', maxHeight: '90vh', overflowY: 'auto', border: '1px solid rgba(255,255,255,0.1)' }}>
+    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1002, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(15px)', boxSizing: 'border-box' }}>
+      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '600px', padding: '2.5rem', maxHeight: '90vh', overflowY: 'auto', border: '1px solid rgba(255,255,255,0.1)', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
              <div style={{ padding: '0.6rem', background: 'rgba(var(--primary-rgb), 0.1)', borderRadius: '12px' }}><FileText size={20} color="var(--primary)" /></div>
@@ -40,7 +40,7 @@ export default function MonthlyReportModal({ show, onClose, transactions, totals
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#fff' }}><X size={24} /></button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
            <div className="glass-panel" style={{ padding: '1.2rem', background: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.2)' }}>
               <div style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginBottom: '0.5rem' }}>INGRESOS TOTALES</div>
               <h3 style={{ margin: 0, fontSize: '1.5rem' }}>${totals.monthlyIncomeUSD.toLocaleString()}</h3>

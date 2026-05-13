@@ -35,17 +35,17 @@ export default function SleepLogForm({ onLogSleep }) {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem' }}>
-          <div className="form-group">
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label>Horas Totales</label>
-            <input type="number" step="0.1" min="0" max="24" value={hours} onChange={e => setHours(e.target.value)} placeholder="Ej. 7.5" required autoFocus />
+            <input type="number" step="0.1" min="0" max="24" value={hours} onChange={e => setHours(e.target.value)} placeholder="Ej. 7.5" required autoFocus style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
-          <div className="form-group">
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Moon size={14} opacity={0.7}/> Hora de dormir</label>
-            <input type="time" value={bedtime} onChange={e => setBedtime(e.target.value)} />
+            <input type="time" value={bedtime} onChange={e => setBedtime(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
-          <div className="form-group">
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Sun size={14} opacity={0.7}/> Hora de despertar</label>
-            <input type="time" value={wakeupTime} onChange={e => setWakeupTime(e.target.value)} />
+            <input type="time" value={wakeupTime} onChange={e => setWakeupTime(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
         </div>
 
@@ -65,9 +65,9 @@ export default function SleepLogForm({ onLogSleep }) {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className="form-group" style={{ minWidth: 0 }}>
           <label>Notas (opcional)</label>
-          <input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="Ej. Me desperté varias veces..." />
+          <input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="Ej. Me desperté varias veces..." style={{ width: '100%', boxSizing: 'border-box' }} />
         </div>
 
         <button type="submit" className="btn-primary" style={{ padding: '1rem', background: '#8b5cf6', color: 'white' }}>Guardar Registro</button>

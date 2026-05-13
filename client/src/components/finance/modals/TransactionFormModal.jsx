@@ -22,8 +22,8 @@ export default function TransactionFormModal({
   };
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(10px)' }}>
-      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '520px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto' }} onSubmit={onSubmit}>
+    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
+      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '520px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }} onSubmit={onSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
           <h2 style={{ margin: 0 }}>{editingItem ? 'Editar' : 'Nuevo'} Movimiento</h2>
           <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#fff' }}><X size={20} /></button>
@@ -41,19 +41,19 @@ export default function TransactionFormModal({
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-           <div className="form-group">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+           <div className="form-group" style={{ minWidth: 0 }}>
              <label>Monto</label>
-             <input type="number" value={newTrans.amount} onChange={e => setNewTrans({...newTrans, amount: e.target.value})} step="0.01" required />
+             <input type="number" value={newTrans.amount} onChange={e => setNewTrans({...newTrans, amount: e.target.value})} step="0.01" required style={{ width: '100%', boxSizing: 'border-box' }} />
            </div>
-           <div className="form-group">
+           <div className="form-group" style={{ minWidth: 0 }}>
              <label>Divisa</label>
-             <select value={newTrans.currency} onChange={e => setNewTrans({...newTrans, currency: e.target.value})}>
-               <option value="USD">USD</option>
-               <option value="BS">BS (Paralelo)</option>
-               <option value="BS_BCV">BS (BCV)</option>
-               <option value="COP">COP</option>
-               <option value="USDT">USDT</option>
+             <select value={newTrans.currency} onChange={e => setNewTrans({...newTrans, currency: e.target.value})} style={{ width: '100%', boxSizing: 'border-box' }}>
+               <option value="USD">🇺🇸 USD</option>
+               <option value="BS_P">🇻🇪 Bs (Paralelo)</option>
+               <option value="BS_BCV">🏛️ Bs (BCV)</option>
+               <option value="COP">🇨🇴 COP</option>
+               <option value="EUR">🇪🇺 EUR</option>
              </select>
            </div>
         </div>
@@ -79,14 +79,14 @@ export default function TransactionFormModal({
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label>Origen / Fuente</label>
-            <input type="text" value={newTrans.source} onChange={e => setNewTrans({...newTrans, source: e.target.value})} placeholder="Ej: Efectivo, Banco..." />
+            <input type="text" value={newTrans.source} onChange={e => setNewTrans({...newTrans, source: e.target.value})} placeholder="Ej: Efectivo, Banco..." style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
-          <div className="form-group">
+          <div className="form-group" style={{ minWidth: 0 }}>
             <label>Fecha</label>
-            <input type="date" value={newTrans.date} onChange={e => setNewTrans({...newTrans, date: e.target.value})} required />
+            <input type="date" value={newTrans.date} onChange={e => setNewTrans({...newTrans, date: e.target.value})} required style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
         </div>
 
