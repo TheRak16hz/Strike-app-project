@@ -2,7 +2,7 @@ const API = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => ({
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('token')}`
+  'Authorization': `Bearer ${localStorage.getItem('strike_token')}`
 });
 
 export const sleepService = {
