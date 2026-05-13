@@ -28,7 +28,7 @@ export default function Finance() {
     goals: [],
     transactions: [],
     settings: {
-      exchange_rates: { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648 },
+      exchange_rates: { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, eur_bs_bcv: 570 },
       budgets: {},
     },
   });
@@ -55,7 +55,7 @@ export default function Finance() {
     goal_id: '',
   });
   const [adjustData, setAdjustData] = useState({ amount: '', description: '', currency: 'USD' });
-  const [rates, setRates] = useState({ usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648 });
+  const [rates, setRates] = useState({ usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, eur_bs_bcv: 570 });
   const [budgets, setBudgets] = useState({});
   const [metadata, setMetadata] = useState({ finance_categories: [], rate_configs: [], currencies: [] });
 

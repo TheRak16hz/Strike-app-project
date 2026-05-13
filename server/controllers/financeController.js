@@ -41,7 +41,7 @@ exports.fetchLiveRates = async (req, res) => {
   try {
     const settingsResult = await db.query('SELECT settings FROM user_settings WHERE user_id = $1', [req.user.id]);
     const currentSettings = settingsResult.rows[0]?.settings || {};
-    const defaultRates = { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648, eur_bs_bcv: 570 };
+    const defaultRates = { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, eur_bs_bcv: 570 };
     const currentRates = currentSettings.exchange_rates || defaultRates;
 
     // Check cache: only fetch if last_live_fetch was > 24h ago (user-triggered button)
@@ -112,7 +112,7 @@ exports.getFinanceData = async (req, res) => {
       goals: goalsResult.rows,
       transactions: transactionsResult.rows,
       settings: finalSettings || { 
-        exchange_rates: { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, usdt_bs: 648 },
+        exchange_rates: { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, eur_bs_bcv: 570 },
         budgets: {} 
       }
     });
