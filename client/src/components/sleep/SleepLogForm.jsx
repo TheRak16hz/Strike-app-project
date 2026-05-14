@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Moon, Sun, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -9,6 +9,21 @@ export default function SleepLogForm({ onLogSleep }) {
   const [wakeupTime, setWakeupTime] = useState('');
   const [quality, setQuality] = useState(3);
   const [notes, setNotes] = useState('');
+
+  useEffect(() => {
+    if (bedtime && wakeupTime) {
+      const [bedHour, bedMin] = bedtime.split(':').map(Number);
+      const [wakeHour, wakeMin] = wakeupTime.split(':').map(Number);
+
+      let diffMin = (wakeHour * 60 + wakeMin) - (bedHour * 60 + bedMin);
+      if (diffMin < 0) {
+        diffMin += 24 * 60;
+      }
+      
+      const calculatedHours = Number((diffMin / 60).toFixed(2));
+      setHours(calculatedHours);
+    }
+  }, [bedtime, wakeupTime]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

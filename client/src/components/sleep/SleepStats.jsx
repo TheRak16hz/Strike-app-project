@@ -56,7 +56,7 @@ export default function SleepStats({ stats, settings, logs }) {
               return (
                 <div key={log.id || i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{new Date(log.log_date + 'T12:00:00Z').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{new Date(log.log_date.split('T')[0] + 'T12:00:00Z').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
                     <div style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.2rem' }}>{log.bedtime ? `${log.bedtime} - ${log.wakeup_time}` : 'Sin hora'}</div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>

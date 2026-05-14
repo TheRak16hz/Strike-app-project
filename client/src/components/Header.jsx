@@ -31,6 +31,10 @@ export default function Header({ onNewHabitClick, onFinanceAction }) {
       borderBottom: '1px solid var(--border-light)',
       position: 'sticky',
       top: 0,
+      left: 0,
+      right: 0,
+      width: '100%',
+      boxSizing: 'border-box',
       zIndex: 1000
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
