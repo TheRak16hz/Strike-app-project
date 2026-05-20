@@ -95,8 +95,8 @@ export default function HabitForm({ onSubmit, initialData = null, onClose }) {
   const DAYS = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
 
   return (
-    <div className="habit-modal-overlay">
-      <div className="habit-modal animate-scale glass-panel">
+    <div className="modal-overlay">
+      <div className="modal-content animate-scale">
         <div className="modal-header">
           <div>
             <h2 className="modal-title">{initialData ? 'Editar' : 'Crear Nueva'}</h2>

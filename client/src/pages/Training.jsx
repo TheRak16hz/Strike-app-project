@@ -6,6 +6,7 @@ import RoutineList from '../components/training/RoutineList';
 import RoutineModal from '../components/training/modals/RoutineModal';
 import LogWorkoutModal from '../components/training/modals/LogWorkoutModal';
 import ExerciseLibraryModal from '../components/training/modals/ExerciseLibraryModal';
+import TrainingSettingsModal from '../components/training/modals/TrainingSettingsModal';
 import TrainingStats from '../components/training/TrainingStats';
 import { Activity, Flame, CalendarSync } from 'lucide-react';
 
@@ -17,6 +18,7 @@ export default function Training() {
   
   const [showRoutineModal, setShowRoutineModal] = useState(false);
   const [showLibraryModal, setShowLibraryModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [selectedRoutineToLog, setSelectedRoutineToLog] = useState(null);
   
   const [activeTab, setActiveTab] = useState('routines'); // 'routines' or 'history'
@@ -133,6 +135,7 @@ export default function Training() {
       <TrainingHeader 
         onNewRoutine={() => setShowRoutineModal(true)} 
         onManageLibrary={() => setShowLibraryModal(true)}
+        onSettings={() => setShowSettingsModal(true)}
       />
 
       {/* Stats Cards */}
@@ -252,6 +255,13 @@ export default function Training() {
             onCreateExercise={handleCreateExercise}
             onUpdateExercise={handleUpdateExercise}
             onDeleteExercise={handleDeleteExercise}
+        />
+      )}
+
+      {showSettingsModal && (
+        <TrainingSettingsModal
+            show={showSettingsModal}
+            onClose={() => setShowSettingsModal(false)}
         />
       )}
 

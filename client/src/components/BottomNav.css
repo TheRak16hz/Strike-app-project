@@ -72,5 +72,6 @@
   }
   .bottom-nav-fab {
     display: flex;
+    bottom: calc(85px + env(safe-area-inset-bottom));
   }
 }

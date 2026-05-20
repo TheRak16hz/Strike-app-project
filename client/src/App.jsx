@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useContext, useMemo } from 'react';
-import { Plus, Activity, Search, Tag, Filter } from 'lucide-react';
+import { Plus, Activity, Search, Tag, Filter, Settings } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
@@ -18,6 +18,7 @@ import BottomNav from './components/BottomNav';
 import { useTheme } from './hooks/useTheme';
 import { useNotifications } from './hooks/useNotifications';
 import HabitRadarChart from './components/HabitRadarChart';
+import HabitSettingsModal from './components/HabitSettingsModal';
 import MotivationalQuote, { getQuote } from './components/MotivationalQuote';
 import './App.css';
 
@@ -25,6 +26,7 @@ function Dashboard() {
   const [habits, setHabits] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [showHabitSettings, setShowHabitSettings] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -513,6 +515,14 @@ function Dashboard() {
             >
               <Plus size={20} /> Nuevo
             </button>
+            <button 
+              className="btn-icon" 
+              onClick={() => setShowHabitSettings(true)}
+              title="Ajustes de Hábitos"
+              style={{ padding: '0.5rem', border: '1px solid var(--border-light)' }}
+            >
+              <Settings size={20} />
+            </button>
           </div>
         </div>
 
@@ -580,6 +590,12 @@ function Dashboard() {
           onClose={() => { setIsFormOpen(false); setEditingHabit(null); }}
         />
       )}
+      
+      <HabitSettingsModal 
+        show={showHabitSettings}
+        onClose={() => setShowHabitSettings(false)}
+        onResetComplete={loadHabits}
+      />
     </div>
   );
 }

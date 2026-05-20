@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { Plus, Dumbbell, List } from 'lucide-react';
+import { Plus, Dumbbell, List, Settings } from 'lucide-react';
 
-export default function TrainingHeader({ onNewRoutine, onManageLibrary }) {
+export default function TrainingHeader({ onNewRoutine, onManageLibrary, onSettings }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
       <div style={{ position: 'relative' }}>
@@ -11,8 +11,11 @@ export default function TrainingHeader({ onNewRoutine, onManageLibrary }) {
         <div style={{ height: '3px', width: '40px', background: 'var(--primary)', borderRadius: '10px', marginTop: '2px' }}></div>
       </div>
       
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <button className="btn-secondary" onClick={onManageLibrary} style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem', height: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button className="btn-icon" onClick={onSettings} title="Ajustes de Gym" style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '14px' }}>
+            <Settings size={20} />
+        </button>
+        <button className="btn-secondary desktop-only" onClick={onManageLibrary} style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem', height: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
             <List size={18} /> Ejercicios
         </button>
         <button className="btn-primary" onClick={onNewRoutine} style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem', height: 'auto' }}>
@@ -26,4 +29,5 @@ export default function TrainingHeader({ onNewRoutine, onManageLibrary }) {
 TrainingHeader.propTypes = {
   onNewRoutine: PropTypes.func.isRequired,
   onManageLibrary: PropTypes.func.isRequired,
+  onSettings: PropTypes.func.isRequired,
 };

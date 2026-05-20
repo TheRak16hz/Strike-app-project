@@ -14,18 +14,6 @@ export default function Settings() {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleHardReset = async () => {
-    if (window.confirm('¿ESTÁS SEGURO? Esta acción eliminará TODO el historial de todos tus hábitos permanentemente. No se puede deshacer.')) {
-      try {
-        await habitService.hardReset();
-        toast.success('Todos los hábitos han sido reiniciados');
-      } catch (err) {
-        console.error(err);
-        toast.error('Error al realizar el reinicio total');
-      }
-    }
-  };
-
   return (
     <div className="app-container">
       <header className="app-header animate-slide" style={{ padding: '1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -80,24 +68,6 @@ export default function Settings() {
               >
                 {notificationsEnabled ? <Bell size={18} /> : <BellOff size={18} />}
                 {notificationsEnabled ? 'Activadas' : 'Desactivadas'}
-              </button>
-            </div>
-          </section>
-
-          <section className="settings-section">
-            <h3 style={{ marginTop: 0, marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem', color: 'var(--danger)' }}>Zona de Peligro</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-              <div>
-                <p style={{ margin: 0, fontWeight: 'bold' }}>Hard Reset</p>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Reinicia todos tus hábitos a cero (borra historial)</p>
-              </div>
-              <button 
-                onClick={handleHardReset} 
-                className="btn-primary" 
-                style={{ background: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem' }}
-              >
-                <RefreshCw size={18} />
-                Reiniciar Todo
               </button>
             </div>
           </section>

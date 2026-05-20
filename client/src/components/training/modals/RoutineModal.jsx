@@ -89,8 +89,8 @@ export default function RoutineModal({ show, onClose, onSubmit, library }) {
   if (!show) return null;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(12px)' }}>
-      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '750px', maxHeight: '90vh', overflowY: 'auto', padding: '2rem' }}>
+    <div className="modal-overlay">
+      <div className="modal-content animate-scale" style={{ maxWidth: '750px', padding: '2rem' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>

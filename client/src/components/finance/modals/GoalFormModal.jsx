@@ -12,8 +12,8 @@ export default function GoalFormModal({
   if (!show) return null;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
-      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '480px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }} onSubmit={onSubmit}>
+    <div className="modal-overlay">
+      <form className="modal-content animate-scale" onSubmit={onSubmit}>
          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                <div style={{ padding: '0.6rem', background: newGoal.color || 'var(--primary)', borderRadius: '12px', fontSize: '1.2rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', boxSizing: 'border-box' }}>

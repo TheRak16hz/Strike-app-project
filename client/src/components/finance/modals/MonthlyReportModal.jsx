@@ -30,8 +30,8 @@ export default function MonthlyReportModal({ show, onClose, transactions, totals
     : 0;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1002, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(15px)', boxSizing: 'border-box' }}>
-      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '600px', padding: '2.5rem', maxHeight: '90vh', overflowY: 'auto', border: '1px solid rgba(255,255,255,0.1)', boxSizing: 'border-box' }}>
+    <div className="modal-overlay">
+      <div className="modal-content animate-scale" style={{ maxWidth: '600px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
              <div style={{ padding: '0.6rem', background: 'rgba(var(--primary-rgb), 0.1)', borderRadius: '12px' }}><FileText size={20} color="var(--primary)" /></div>

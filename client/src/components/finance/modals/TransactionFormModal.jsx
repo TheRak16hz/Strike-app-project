@@ -22,8 +22,8 @@ export default function TransactionFormModal({
   };
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
-      <form className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '520px', padding: '1.5rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }} onSubmit={onSubmit}>
+    <div className="modal-overlay">
+      <form className="modal-content animate-scale" style={{ maxWidth: '520px' }} onSubmit={onSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900 }}>{editingItem ? 'Editar' : 'Nuevo'} Movimiento</h2>
           <button type="button" onClick={onClose} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer', flexShrink: 0, padding: 0, margin: 0 }}>

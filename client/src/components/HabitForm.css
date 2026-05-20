@@ -1,29 +1,5 @@
 /* --- Premium HabitForm Styles --- */
 
-.habit-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  padding: 1.5rem;
-}
-
-.habit-modal {
-  width: 100%;
-  max-width: 520px;
-  background: var(--surface);
-  border-radius: 24px;
-  padding: 2.5rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  max-height: 92vh;
-  overflow-y: auto;
-  border: 1px solid var(--border-light);
-}
-
 /* Header */
 .modal-header {
   display: flex;
@@ -410,22 +386,5 @@
   cursor: not-allowed;
 }
 
-/* Scrollbar Modernization */
-.habit-modal::-webkit-scrollbar {
-  width: 8px;
-}
-.habit-modal::-webkit-scrollbar-track {
-  background: transparent;
-}
-.habit-modal::-webkit-scrollbar-thumb {
-  background: var(--border-light);
-  border-radius: 10px;
-}
-
 @media (max-width: 480px) {
-  .habit-modal {
-    padding: 1.5rem;
-    border-radius: 0;
-    max-height: 100vh;
-  }
 }

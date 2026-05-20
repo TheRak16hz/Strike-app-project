@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { X, Save, Settings } from 'lucide-react';
+import { X, Save, Settings, AlertTriangle, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function NutritionSettingsModal({ show, onClose, settings, onSave }) {
   const [localSettings, setLocalSettings] = useState({
@@ -29,8 +30,8 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
   if (!show) return null;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', backdropFilter: 'blur(12px)' }}>
-      <form onSubmit={handleSubmit} className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '450px', maxHeight: '90vh', overflowY: 'auto', padding: '2rem' }}>
+    <div className="modal-overlay">
+      <form onSubmit={handleSubmit} className="modal-content animate-scale">
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{ padding: '0.5rem', background: 'rgba(var(--primary-rgb), 0.1)', borderRadius: '10px' }}><Settings size={20} color="var(--primary)" /></div>
@@ -87,6 +88,30 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
           </div>
 
         </div>
+
+        <section style={{ marginBottom: '2.5rem' }}>
+          <h3 style={{ fontSize: '0.9rem', color: 'var(--danger)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <AlertTriangle size={16} /> Zona de Peligro
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <p style={{ margin: 0, fontWeight: 'bold' }}>Hard Reset Nutrición</p>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Elimina tu librería de alimentos y registros diarios permanentemente.</p>
+            </div>
+            <button 
+              type="button"
+              onClick={() => {
+                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu historial de nutrición.')) {
+                   toast.error('Funcionalidad en desarrollo para API de nutrición');
+                }
+              }} 
+              className="btn-primary" 
+              style={{ background: 'var(--danger)', width: '100%', padding: '1rem', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              <Trash2 size={18} /> Borrar Todo el Historial
+            </button>
+          </div>
+        </section>
 
         <button type="submit" className="btn-primary" style={{ width: '100%', padding: '1.2rem', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', fontWeight: 800 }}>
           <Save size={20} /> Guardar Ajustes

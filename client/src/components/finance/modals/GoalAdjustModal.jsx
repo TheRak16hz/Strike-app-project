@@ -18,8 +18,8 @@ export default function GoalAdjustModal({
   const usdPreview = (parseFloat(adjustData.amount) || 0) / currentRate;
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(10px)', boxSizing: 'border-box' }}>
-      <div className="glass-panel animate-scale" style={{ width: '100%', maxWidth: '400px', padding: '2rem', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }}>
+    <div className="modal-overlay">
+      <div className="modal-content animate-scale">
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
           <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900 }}>Ajustar Reserva</h2>
           <button type="button" onClick={onClose} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer', flexShrink: 0, padding: 0, margin: 0 }}>
