@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useContext, useMemo } from 'react';
-import { Plus, Activity, Search, Tag, Filter, Settings } from 'lucide-react';
+import { Plus, Activity, Search, Tag, Filter, Settings as SettingsIcon } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
@@ -521,7 +521,7 @@ function Dashboard() {
               title="Ajustes de Hábitos"
               style={{ padding: '0.5rem', border: '1px solid var(--border-light)' }}
             >
-              <Settings size={20} />
+              <SettingsIcon size={20} />
             </button>
           </div>
         </div>
