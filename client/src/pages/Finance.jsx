@@ -206,7 +206,7 @@ export default function Finance() {
       checkDate.setDate(today.getDate() - i);
       const dateStr = checkDate.toISOString().split('T')[0];
       history.push({ date: dateStr, value: runningGross });
-      transactions.filter(t => t.date === dateStr).forEach(t => {
+      transactions.filter(t => (t.date ? t.date.split('T')[0] : '') === dateStr).forEach(t => {
         const amountUSD = convertToUSD(t.amount, t.currency);
         if (t.type === 'income') runningGross -= amountUSD;
         if (t.type === 'expense') runningGross += amountUSD;

@@ -10,7 +10,7 @@ export default function FinanceCharts({ totals }) {
       {/* Gráfica 1: Flujo de Caja — ocupa 2 columnas */}
       <section className="glass-panel area-flow" style={{ padding: '1.4rem' }}>
         <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          Flujo de Caja (7D)
+          Flujo de Caja (30D)
         </h3>
         <div style={{ height: '200px', width: '100%', minWidth: 0 }}>
           <ResponsiveContainer width="100%" height="100%">
