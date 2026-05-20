@@ -1,0 +1,36 @@
+const { Pool } = require('pg');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: false
+});
+
+async function run() {
+  try {
+    const nutritionSql = fs.readFileSync(path.join(__dirname, '../db/update_v4_nutrition.sql'), 'utf8');
+    const sleepSql = fs.readFileSync(path.join(__dirname, '../db/update_v4_sleep.sql'), 'utf8');
+    const financeSql = fs.readFileSync(path.join(__dirname, '../db/update_v4_finance_metadata.sql'), 'utf8');
+    
+    console.log('Running nutrition migrations...');
+    await pool.query(nutritionSql);
+    console.log('Nutrition done.');
+
+    console.log('Running sleep migrations...');
+    await pool.query(sleepSql);
+    console.log('Sleep done.');
+
+    console.log('Running finance metadata migrations...');
+    await pool.query(financeSql);
+    console.log('Finance done.');
+
+    console.log('All migrations executed successfully.');
+  } catch (err) {
+    console.error('Migration failed:', err);
+  } finally {
+    pool.end();
+  }
+}
+run();

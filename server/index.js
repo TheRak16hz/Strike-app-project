@@ -8,6 +8,7 @@ const financeRoutes = require('./routes/finance');
 const trainingRoutes = require('./routes/training');
 const nutritionRoutes = require('./routes/nutrition');
 const sleepRoutes = require('./routes/sleep');
+const seedRoutes = require('./routes/seed');
 
 const db = require('./db');
 
@@ -246,6 +247,7 @@ app.use('/api/finance', financeRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/sleep', sleepRoutes);
+app.use('/api/seed', seedRoutes);
 
 // Servir archivos estáticos del cliente (Vite dist) para producción/fallback
 app.use(express.static(path.join(__dirname, '../client/dist')));
