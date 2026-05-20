@@ -88,6 +88,9 @@ export default function Seed() {
       </div>
 
       <WeeklyTracker logs={data.logs} onDayClick={handleDayClick} />
+      <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '-0.5rem' }}>
+        (Haz clic en cualquier día anterior para editar su estado)
+      </p>
 
       <SeedTree streak={data.current_streak} />
 
