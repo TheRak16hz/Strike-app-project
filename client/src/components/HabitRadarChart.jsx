@@ -82,7 +82,7 @@ const HabitRadarChart = ({ habits }) => {
   return (
     <div className="stats-visualization-container" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
       <div style={{ width: '100%', height: 350, minHeight: 300 }}>
-        <ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid stroke="var(--border-light)" />
             <PolarAngleAxis 
