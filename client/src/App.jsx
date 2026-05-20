@@ -68,12 +68,12 @@ function Dashboard() {
 
   const checkReminders = useCallback(() => {
     if (!notificationsEnabled || Notification.permission !== 'granted' || habitsRef.current.length === 0) return;
-    
+
     const now = new Date();
     const currentHour = now.getHours().toString().padStart(2, '0');
     const currentMinute = now.getMinutes().toString().padStart(2, '0');
     const currentTimeStr = `${currentHour}:${currentMinute}`;
-    
+
     // Evitar que se dispare varias veces en el mismo minuto
     if (lastTriggeredTimeRef.current === currentTimeStr) return;
 
@@ -83,13 +83,13 @@ function Dashboard() {
     habitsRef.current.forEach(h => {
       const target = h.type === 'quantifiable' ? h.target_value : h.frequency_count;
       const isPending = h.completedCountToday < target;
-      
+
       const currentTimeObj = new Date();
       const currentDateStr = getLocalDateString(currentTimeObj);
-      
+
       // Chequear si es la hora
       const hReminder = h.reminder_time ? h.reminder_time.substring(0, 5) : null;
-      
+
       // Si tiene fecha, solo notificar ese día. Si no, notificar diario (hábitos).
       const dateMatches = !h.reminder_date || h.reminder_date === currentDateStr;
 
@@ -101,10 +101,10 @@ function Dashboard() {
             <span><b>¡Es hora de {h.title}!</b></span>
             <span style={{ fontSize: '0.85rem' }}>Programado para las {hReminder}</span>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-              <button 
-                onClick={() => { 
+              <button
+                onClick={() => {
                   toast.dismiss();
-                  handleToggle(h.id); 
+                  handleToggle(h.id);
                 }}
                 style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
               >Completar ✅</button>
@@ -114,7 +114,7 @@ function Dashboard() {
               >Cerrar</button>
             </div>
           </div>
-        , { duration: 20000, icon: h.icon || '⏰' });
+          , { duration: 20000, icon: h.icon || '⏰' });
 
         if (navigator.serviceWorker && navigator.serviceWorker.ready && Notification.permission === 'granted') {
           navigator.serviceWorker.ready.then(reg => {
@@ -148,7 +148,7 @@ function Dashboard() {
             <span><b>¡El día está por acabar! 🌙</b></span>
             <span style={{ fontSize: '0.85rem' }}>Aún tienes {pendingHabits.length} hábitos pendientes por completar hoy.</span>
           </div>
-        , { duration: 10000, icon: '⚠️' });
+          , { duration: 10000, icon: '⚠️' });
 
         if (navigator.serviceWorker && navigator.serviceWorker.ready && Notification.permission === 'granted') {
           navigator.serviceWorker.ready.then(reg => {
@@ -253,7 +253,7 @@ function Dashboard() {
       }
     }
   };
-  
+
   const handleReset = async (id) => {
     if (window.confirm('¿Quieres reiniciar el progreso de hoy para este hábito?')) {
       try {
@@ -274,17 +274,17 @@ function Dashboard() {
         if (h.id === id) {
           const target = h.is_quantifiable ? h.target_value : h.frequency_count;
           let newCount = h.completedCountToday;
-          
+
           if (amount !== undefined) {
-             newCount += amount;
+            newCount += amount;
           } else {
-             const isFullyCompleted = h.completedCountToday >= target;
-             newCount = isFullyCompleted ? 0 : h.completedCountToday + 1;
+            const isFullyCompleted = h.completedCountToday >= target;
+            newCount = isFullyCompleted ? 0 : h.completedCountToday + 1;
           }
-          
+
           if (newCount < 0) newCount = 0;
           const completedToday = newCount >= target;
-          
+
           return {
             ...h,
             completedCountToday: newCount,
@@ -311,7 +311,7 @@ function Dashboard() {
     }
     const idx = habits.findIndex(h => h.id === id);
     if (idx < 0) return;
-    
+
     const newHabits = [...habits];
     if (direction === 'up' && idx > 0) {
       [newHabits[idx - 1], newHabits[idx]] = [newHabits[idx], newHabits[idx - 1]];
@@ -320,7 +320,7 @@ function Dashboard() {
     } else {
       return;
     }
-    
+
     setHabits(newHabits);
     const orderPayload = newHabits.map((h, i) => ({ id: h.id, position: i }));
     try {
@@ -386,55 +386,55 @@ function Dashboard() {
   }, [habits]);
 
   const filteredHabits = habits.filter(habit => {
-    const matchesSearch = habit.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          habit.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = habit.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      habit.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTag = selectedTag === 'all' || habit.tags?.split(',').includes(selectedTag);
     const matchesTab = activeTab === 'habitos' ? !habit.is_one_time : habit.is_one_time;
-    
+
     return matchesSearch && matchesTag && matchesTab;
   });
 
   return (
-    <div className="app-container" style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
-        <div className="dashboard-card glass-panel animate-scale">
-          <div className="stats-container">
-            {activeTab === 'habitos' ? (
-              <div className="stat-section animate-fade-in">
-                <div className="stats-header">
-                  <h2>Progreso de Hábitos</h2>
-                  <span className="stats-text">{habitProgress}% completado</span>
-                </div>
-                {showQuote && <MotivationalQuote message={currentQuote} onClose={handleCloseQuote} />}
-                <div className="progress-bar-container">
-                  <div className="progress-bar-fill" style={{ width: `${habitProgress}%` }}></div>
-                </div>
+    <div className="app-container" style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '2rem' }}>
+      <div className="dashboard-card glass-panel animate-scale">
+        <div className="stats-container">
+          {activeTab === 'habitos' ? (
+            <div className="stat-section animate-fade-in">
+              <div className="stats-header">
+                <h2>Progreso de Hábitos</h2>
+                <span className="stats-text">{habitProgress}% completado</span>
               </div>
-            ) : (
-              <div className="stat-section animate-fade-in">
-                <div className="stats-header">
-                  <h2>Progreso de Tareas</h2>
-                  <span className="stats-text" style={{ color: 'var(--brand-green)' }}>{taskProgress}% completado</span>
-                </div>
-                {showQuote && <MotivationalQuote message={currentQuote} onClose={handleCloseQuote} />}
-                <div className="progress-bar-container">
-                  <div className="progress-bar-fill" style={{ width: `${taskProgress}%`, background: 'var(--brand-green)' }}></div>
-                </div>
+              {showQuote && <MotivationalQuote message={currentQuote} onClose={handleCloseQuote} />}
+              <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${habitProgress}%` }}></div>
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="stat-section animate-fade-in">
+              <div className="stats-header">
+                <h2>Progreso de Tareas</h2>
+                <span className="stats-text" style={{ color: 'var(--brand-green)' }}>{taskProgress}% completado</span>
+              </div>
+              {showQuote && <MotivationalQuote message={currentQuote} onClose={handleCloseQuote} />}
+              <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${taskProgress}%`, background: 'var(--brand-green)' }}></div>
+              </div>
+            </div>
+          )}
         </div>
+      </div>
 
       <main className="app-main">
         <div className="list-header animate-slide" style={{ animationDelay: '0.1s', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', width: '100%' }}>
             <h2>{activeTab === 'habitos' ? 'Mis Hábitos' : 'Mis Tareas'}</h2>
             <div className="dashboard-tabs" style={{ flexWrap: 'wrap' }}>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'habitos' ? 'active' : ''}`}
-                style={{ 
-                  background: activeTab === 'habitos' ? 'var(--primary)' : 'transparent', 
+                style={{
+                  background: activeTab === 'habitos' ? 'var(--primary)' : 'transparent',
                   border: 'none', padding: '0.4rem 0.5rem', cursor: 'pointer',
-                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, 
+                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600,
                   color: activeTab === 'habitos' ? 'white' : 'var(--text-secondary)',
                   transition: 'all 0.2s', flex: '1 1 auto'
                 }}
@@ -442,12 +442,12 @@ function Dashboard() {
               >
                 🔄 Hábitos
               </button>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'tareas' ? 'active' : ''}`}
-                style={{ 
-                  background: activeTab === 'tareas' ? 'var(--primary)' : 'transparent', 
+                style={{
+                  background: activeTab === 'tareas' ? 'var(--primary)' : 'transparent',
                   border: 'none', padding: '0.4rem 0.5rem', cursor: 'pointer',
-                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, 
+                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600,
                   color: activeTab === 'tareas' ? 'white' : 'var(--text-secondary)',
                   transition: 'all 0.2s', flex: '1 1 auto'
                 }}
@@ -455,12 +455,12 @@ function Dashboard() {
               >
                 ✅ Tareas
               </button>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'stats' ? 'active' : ''}`}
-                style={{ 
-                  background: activeTab === 'stats' ? 'var(--primary)' : 'transparent', 
+                style={{
+                  background: activeTab === 'stats' ? 'var(--primary)' : 'transparent',
                   border: 'none', padding: '0.4rem 0.5rem', cursor: 'pointer',
-                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600, 
+                  borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600,
                   color: activeTab === 'stats' ? 'white' : 'var(--text-secondary)',
                   transition: 'all 0.2s', flex: '1 1 auto'
                 }}
@@ -471,22 +471,22 @@ function Dashboard() {
             </div>
           </div>
 
-        <div className="header-actions" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div className="header-actions" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <div className="search-bar">
               <Search size={18} className="search-icon" />
-              <input 
-                type="text" 
-                placeholder="Buscar hábito..." 
+              <input
+                type="text"
+                placeholder="Buscar hábito..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
+
             {activeTab === 'habitos' && (
               <div className="filter-group">
                 <Filter size={18} className="filter-icon" />
-                <select 
-                  value={filterType} 
+                <select
+                  value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                 >
                   <option value="all">Tipos: Todos</option>
@@ -499,8 +499,8 @@ function Dashboard() {
 
             <div className="filter-group">
               <Tag size={18} className="filter-icon" />
-              <select 
-                value={selectedTag} 
+              <select
+                value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
               >
                 <option value="all">Etiquetas: Todas</option>
@@ -510,14 +510,14 @@ function Dashboard() {
               </select>
             </div>
 
-            <button 
-              className="btn-primary desktop-only" 
+            <button
+              className="btn-primary desktop-only"
               onClick={() => { setEditingHabit(null); setIsFormOpen(true); }}
             >
               <Plus size={20} /> Nuevo
             </button>
-            <button 
-              className="btn-icon" 
+            <button
+              className="btn-icon"
               onClick={() => setShowHabitSettings(true)}
               title="Ajustes de Hábitos"
               style={{ padding: '0.5rem', border: '1px solid var(--border-light)' }}
@@ -532,22 +532,22 @@ function Dashboard() {
             <div className="loading-state">Cargando hábitos...</div>
           ) : activeTab === 'stats' ? (
             <div className="stats-tab-content animate-scale glass-panel" style={{ padding: '2.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-               <div className="stats-header-info">
-                 <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Análisis Strike</h2>
-                 <p style={{ color: 'var(--text-secondary)' }}>Métricas de rendimiento en tiempo real</p>
-               </div>
-               
-               <HabitRadarChart habits={habits} />
-               
-               <div style={{ 
-                 marginTop: '1rem', 
-                 padding: '1.5rem', 
-                 background: 'rgba(var(--primary-rgb), 0.05)', 
-                 borderRadius: '20px', 
-                 border: '1px dashed var(--primary)', 
-                 textAlign: 'left',
-                 boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
-               }}>
+              <div className="stats-header-info">
+                <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Análisis Strike</h2>
+                <p style={{ color: 'var(--text-secondary)' }}>Métricas de rendimiento en tiempo real</p>
+              </div>
+
+              <HabitRadarChart habits={habits} />
+
+              <div style={{
+                marginTop: '1rem',
+                padding: '1.5rem',
+                background: 'rgba(var(--primary-rgb), 0.05)',
+                borderRadius: '20px',
+                border: '1px dashed var(--primary)',
+                textAlign: 'left',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)'
+              }}>
                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                   💡 <b>Consejo:</b> Tu hexágono refleja tu desempeño actual. La <b>Dedicación</b> mide tus completaciones de hoy, mientras que la <b>Disciplina</b> premia la constancia de tus rachas acumuladas. ¡Sigue así para expandir tu potencial!
                 </p>
@@ -558,8 +558,8 @@ function Dashboard() {
               <Activity size={48} style={{ color: 'var(--border-light)', marginBottom: '1rem' }} />
               <h3>{activeTab === 'habitos' ? 'Aún no tienes hábitos' : 'Aún no tienes tareas'}</h3>
               <p>
-                {activeTab === 'habitos' 
-                  ? 'Comienza creando un hábito y no rompas tu racha.' 
+                {activeTab === 'habitos'
+                  ? 'Comienza creando un hábito y no rompas tu racha.'
                   : 'Añade una tarea puntual para organizar tu día.'}
               </p>
               <button className="btn-primary" onClick={() => setIsFormOpen(true)}>
@@ -569,7 +569,7 @@ function Dashboard() {
           ) : (
             filteredHabits.map((habit, index) => (
               <div key={habit.id} style={{ animationDelay: `${0.1 + (index * 0.05)}s` }} className="animate-slide">
-                <HabitItem 
+                <HabitItem
                   habit={habit}
                   onToggle={handleToggle}
                   onEdit={openEdit}
@@ -585,14 +585,14 @@ function Dashboard() {
       </main>
 
       {isFormOpen && (
-        <HabitForm 
+        <HabitForm
           onSubmit={handleCreateOrUpdate}
           initialData={editingHabit}
           onClose={() => { setIsFormOpen(false); setEditingHabit(null); }}
         />
       )}
-      
-      <HabitSettingsModal 
+
+      <HabitSettingsModal
         show={showHabitSettings}
         onClose={() => setShowHabitSettings(false)}
         onResetComplete={loadHabits}
@@ -605,10 +605,10 @@ function Dashboard() {
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ children }) => {
   const { token, loading } = useContext(AuthContext);
-  
+
   if (loading) return <div className="app-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--text-primary)' }}><h2>Cargando...</h2></div>;
   if (!token) return <Navigate to="/login" replace />;
-  
+
   return children;
 };
 
@@ -626,12 +626,12 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route 
-          path="*" 
+        <Route
+          path="*"
           element={
             <PrivateRoute>
               <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                <Header 
+                <Header
                   onNewHabitClick={() => window.dispatchEvent(new CustomEvent('nav-action-new-habit'))}
                   onFinanceAction={() => window.dispatchEvent(new CustomEvent('nav-action-finance'))}
                 />
@@ -645,13 +645,13 @@ export default function App() {
                   <Route path="/seed" element={<Seed />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-                <BottomNav 
+                <BottomNav
                   onNewHabitClick={() => window.dispatchEvent(new CustomEvent('nav-action-new-habit'))}
                   onFinanceAction={() => window.dispatchEvent(new CustomEvent('nav-action-finance'))}
                 />
               </div>
             </PrivateRoute>
-          } 
+          }
         />
       </Routes>
     </>
