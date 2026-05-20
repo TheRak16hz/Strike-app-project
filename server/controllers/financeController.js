@@ -262,7 +262,7 @@ exports.updateTransaction = async (req, res) => {
 
     const updatedTx = await db.query(
       'UPDATE transactions SET type = $1, amount = $2, currency = $3, category = $4, source = $5, description = $6, date = $7, goal_id = $8 WHERE id = $9 AND user_id = $10 RETURNING *',
-      [type, amount, currency, category, source, description, date, goal_id, id, req.user.id]
+      [type, amount, currency, category, source, description, date, goal_id || null, id, req.user.id]
     );
 
     await db.query('COMMIT');

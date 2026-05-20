@@ -15,7 +15,9 @@ export const financeService = {
     const res = await fetch(`${API_URL}/`, {
       headers: getAuthHeader()
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   getMetadata: async () => {
@@ -31,7 +33,9 @@ export const financeService = {
       headers: getAuthHeader(),
       body: JSON.stringify(goalData)
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   updateGoal: async (id, goalData) => {
@@ -40,7 +44,9 @@ export const financeService = {
       headers: getAuthHeader(),
       body: JSON.stringify(goalData)
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   deleteGoal: async (id) => {
@@ -57,7 +63,9 @@ export const financeService = {
       headers: getAuthHeader(),
       body: JSON.stringify(transData)
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   updateTransaction: async (id, transData) => {
@@ -66,7 +74,9 @@ export const financeService = {
       headers: getAuthHeader(),
       body: JSON.stringify(transData)
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   deleteTransaction: async (id) => {
@@ -74,7 +84,9 @@ export const financeService = {
       method: 'DELETE',
       headers: getAuthHeader()
     });
-    return res.json();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
   },
 
   deleteAllTransactions: async () => {
