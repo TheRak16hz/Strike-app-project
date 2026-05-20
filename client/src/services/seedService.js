@@ -1,15 +1,24 @@
-import axios from 'axios';
-
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const getSeedData = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const res = await axios.get(`${API_URL}/api/seed`, config);
-  return res.data;
+  const res = await fetch(`${API_URL}/api/seed`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  if (!res.ok) throw new Error('Error al obtener datos');
+  return res.json();
 };
 
 export const logSeedEvent = async (token, status, date) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } };
-  const res = await axios.post(`${API_URL}/api/seed/log`, { status, log_date: date }, config);
-  return res.data;
+  const res = await fetch(`${API_URL}/api/seed/log`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ status, log_date: date })
+  });
+  if (!res.ok) throw new Error('Error al registrar evento');
+  return res.json();
 };
