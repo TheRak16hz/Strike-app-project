@@ -18,7 +18,7 @@ export default function TransactionFormModal({
   };
 
   const handleCategorySelect = (cat) => {
-    setNewTrans({ ...newTrans, category: cat.label });
+    setNewTrans({ ...newTrans, category: cat.label || cat.id });
   };
 
   return (
@@ -70,12 +70,12 @@ export default function TransactionFormModal({
                 style={{ 
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', padding: '0.5rem',
                   borderRadius: '8px', cursor: 'pointer', transition: '0.2s',
-                  background: newTrans.category === cat.label ? 'rgba(var(--primary-rgb), 0.1)' : 'transparent',
-                  border: `1px solid ${newTrans.category === cat.label ? 'var(--primary)' : 'rgba(255,255,255,0.05)'}`
+                  background: newTrans.category === (cat.label || cat.id) ? 'rgba(var(--primary-rgb), 0.1)' : 'transparent',
+                  border: `1px solid ${newTrans.category === (cat.label || cat.id) ? 'var(--primary)' : 'rgba(255,255,255,0.05)'}`
                 }}
               >
-                <span style={{ fontSize: '1.2rem' }}>{cat.icon}</span>
-                <span style={{ fontSize: '0.65rem', fontWeight: 600 }}>{cat.label}</span>
+                <span style={{ fontSize: '1.2rem' }}>{cat.icon || cat.emoji}</span>
+                <span style={{ fontSize: '0.65rem', fontWeight: 600 }}>{cat.label || cat.id}</span>
               </div>
             ))}
           </div>

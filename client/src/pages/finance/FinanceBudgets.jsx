@@ -254,7 +254,7 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
               {/* Category Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <span style={{ fontSize: '1.4rem' }}>{catObj.icon || '📦'}</span>
+                  <span style={{ fontSize: '1.4rem' }}>{catObj.icon || catObj.emoji || '📦'}</span>
                   <div>
                     <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>{cat}</div>
                     {budget > 0 && <StatusBadge pct={rawPct} />}
