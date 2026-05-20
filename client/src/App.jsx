@@ -395,7 +395,7 @@ function Dashboard() {
   });
 
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
         <div className="dashboard-card glass-panel animate-scale">
           <div className="stats-container">
             {activeTab === 'habitos' ? (
