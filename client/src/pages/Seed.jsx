@@ -20,6 +20,8 @@ export default function Seed() {
   const [data, setData] = useState({ logs: [], current_streak: 0 });
   const [quote, setQuote] = useState('');
 
+  const [selectedDateToEdit, setSelectedDateToEdit] = useState(null);
+
   useEffect(() => {
     if (user && user.username === 'TheRak16hz') {
       loadData();
@@ -42,14 +44,19 @@ export default function Seed() {
     }
   };
 
-  const handleLog = async (status) => {
+  const handleLog = async (status, logDate = null) => {
     try {
-      await logSeedEvent(token, status);
+      await logSeedEvent(token, status, logDate);
       toast.success(status === 'clean' ? '¡Día limpio registrado!' : 'Registro actualizado');
       loadData();
+      setSelectedDateToEdit(null);
     } catch (err) {
       toast.error('Error al registrar');
     }
+  };
+
+  const handleDayClick = (day) => {
+    setSelectedDateToEdit(day);
   };
 
   if (!user || user.username !== 'TheRak16hz') {
@@ -80,7 +87,7 @@ export default function Seed() {
         <p style={{ margin: 0, opacity: 0.6, fontSize: '0.85rem' }}>{date} — Progreso Personal</p>
       </div>
 
-      <WeeklyTracker logs={data.logs} />
+      <WeeklyTracker logs={data.logs} onDayClick={handleDayClick} />
 
       <SeedTree streak={data.current_streak} />
 
@@ -144,6 +151,49 @@ export default function Seed() {
       }}>
         "{quote}"
       </div>
+
+      {selectedDateToEdit && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 9999, padding: '1rem'
+        }}>
+          <div className="glass-panel animate-scale" style={{ padding: '2rem', borderRadius: '20px', maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+            <h3 style={{ margin: '0 0 1rem 0' }}>Editar {selectedDateToEdit.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+              ¿Qué ocurrió exactamente ese día? Modificar este registro podría recalcular tu racha actual.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <button 
+                className="btn-primary" 
+                style={{ background: 'var(--brand-green)' }}
+                onClick={() => {
+                  const localDate = new Date(selectedDateToEdit.getTime() - (selectedDateToEdit.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                  handleLog('clean', localDate);
+                }}
+              >
+                Mantuve el control ✅
+              </button>
+              <button 
+                className="btn-primary" 
+                style={{ background: 'var(--danger)' }}
+                onClick={() => {
+                  const localDate = new Date(selectedDateToEdit.getTime() - (selectedDateToEdit.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                  handleLog('relapse', localDate);
+                }}
+              >
+                Tuve un fallo ❌
+              </button>
+              <button 
+                style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-primary)', padding: '0.8rem', borderRadius: '12px', marginTop: '0.5rem', cursor: 'pointer' }}
+                onClick={() => setSelectedDateToEdit(null)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

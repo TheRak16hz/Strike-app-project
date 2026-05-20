@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
-export default function WeeklyTracker({ logs }) {
+export default function WeeklyTracker({ logs, onDayClick }) {
   const getDaysOfWeek = () => {
     const today = new Date();
     const days = [];
@@ -61,8 +61,12 @@ export default function WeeklyTracker({ logs }) {
             alignItems: 'center',
             gap: '0.5rem',
             opacity: day > new Date() ? 0.3 : 1,
-            position: 'relative'
-          }}>
+            position: 'relative',
+            cursor: 'pointer',
+            transition: 'transform 0.2s',
+          }}
+          className="hover-scale"
+          onClick={() => onDayClick && onDayClick(day)}>
             <span style={{ 
               fontSize: '0.75rem', 
               color: isToday ? 'var(--primary)' : 'var(--text-secondary)',
@@ -89,5 +93,6 @@ export default function WeeklyTracker({ logs }) {
 }
 
 WeeklyTracker.propTypes = {
-  logs: PropTypes.array.isRequired
+  logs: PropTypes.array.isRequired,
+  onDayClick: PropTypes.func
 };
