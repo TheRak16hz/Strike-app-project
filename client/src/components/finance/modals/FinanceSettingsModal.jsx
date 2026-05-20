@@ -157,6 +157,7 @@ export default function FinanceSettingsModal({ show, onClose, rates, budgets, on
                 />
               </div>
             ))}
+          </div>
         </section>
 
         <section style={{ marginBottom: '2.5rem' }}>
