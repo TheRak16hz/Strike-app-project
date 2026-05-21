@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { 
-  Activity, Settings, Bell, BellOff, Wallet, Home, Plus, Dumbbell, Apple, Moon, Leaf
+  Activity, Settings, Bell, BellOff, Wallet, Home, Plus, Dumbbell, Apple, Moon, Leaf, BarChart2
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -143,6 +143,14 @@ export default function Header({ onNewHabitClick, onFinanceAction }) {
               style={{ padding: '0.4rem' }}
             >
               {notificationsEnabled ? <Bell size={16} /> : <BellOff size={16} />}
+            </button>
+            <button 
+              onClick={() => navigate('/stats')} 
+              className={`theme-toggle ${location.pathname === '/stats' ? 'active-bell' : ''}`}
+              title="Estadísticas"
+              style={{ padding: '0.4rem', color: location.pathname === '/stats' ? 'var(--primary)' : 'inherit' }}
+            >
+              <BarChart2 size={16} />
             </button>
             <button 
               onClick={() => navigate('/settings')} 
