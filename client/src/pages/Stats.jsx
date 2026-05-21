@@ -41,7 +41,7 @@ export default function Stats() {
         financeService.getFinanceData().catch(() => null),
         sleepService.getSleepData().catch(() => []),
         nutritionService.getDailyData().catch(() => []),
-        trainingService.getSessions().catch(() => []),
+        trainingService.getLogs().catch(() => []),
         isTheRak && user?.token ? getSeedData(user.token).catch(() => null) : Promise.resolve(null)
       ];
 
