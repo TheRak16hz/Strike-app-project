@@ -6,10 +6,8 @@ import { habitService } from '../services/habitService';
 import { sleepService } from '../services/sleepService';
 import { nutritionService } from '../services/nutritionService';
 import { trainingService } from '../services/trainingService';
-import { seedService } from '../services/seedService';
+import { getSeedData } from '../services/seedService';
 import HabitRadarChart from '../components/HabitRadarChart';
-import { getLocalDateString } from '../utils/dateUtils'; // We'll assume or create this if needed, but App.jsx has it internally. Let's just use local functions.
-
 // Helpers
 const getVeDate = (date = new Date()) => new Date(date.toLocaleString('en-US', { timeZone: 'America/Caracas' }));
 const getVeDateString = (date = new Date()) => {
@@ -44,7 +42,7 @@ export default function Stats() {
         sleepService.getSleepData().catch(() => []),
         nutritionService.getDailyData().catch(() => []),
         trainingService.getSessions().catch(() => []),
-        isTheRak ? seedService.getSeedData().catch(() => null) : Promise.resolve(null)
+        isTheRak && user?.token ? getSeedData(user.token).catch(() => null) : Promise.resolve(null)
       ];
 
       const [habitsRes, financeRes, sleepRes, nutritionRes, trainingRes, seedRes] = await Promise.all(promises);
