@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { X, Settings, AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { trainingService } from '../../../services/trainingService';
 
 export default function TrainingSettingsModal({ show, onClose }) {
   if (!show) return null;
@@ -28,9 +29,15 @@ export default function TrainingSettingsModal({ show, onClose }) {
             </div>
             <button 
               type="button"
-              onClick={() => {
-                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu progreso de entrenamiento.')) {
-                   toast.error('Funcionalidad en desarrollo para API de entrenamiento');
+              onClick={async () => {
+                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu progreso de entrenamiento y registros.')) {
+                   try {
+                     await trainingService.deleteAllWorkoutLogs();
+                     toast.success('Todo el historial de gimnasio ha sido borrado');
+                     window.location.reload();
+                   } catch (err) {
+                     toast.error('Error al borrar el historial');
+                   }
                 }
               }} 
               className="btn-primary" 

@@ -147,8 +147,21 @@ exports.deleteRoutine = async (req, res) => {
     if (result.rowCount === 0) return res.status(404).json({ error: 'Rutina no encontrada' });
     res.json({ message: 'Rutina eliminada' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: 'Error al eliminar rutina' });
+    console.error('Error deleteWorkoutLog:', err);
+    res.status(500).json({ error: 'Error al eliminar registro' });
+  }
+};
+
+// ========================
+// DELETE /api/training/logs/all
+// ========================
+exports.deleteAllWorkoutLogs = async (req, res) => {
+  try {
+    await db.query('DELETE FROM workout_logs WHERE user_id = $1', [req.user.id]);
+    res.json({ success: true, message: 'Todos los registros de entrenamiento eliminados' });
+  } catch (err) {
+    console.error('Error deleteAllWorkoutLogs:', err);
+    res.status(500).json({ error: 'Error al eliminar todos los registros' });
   }
 };
 

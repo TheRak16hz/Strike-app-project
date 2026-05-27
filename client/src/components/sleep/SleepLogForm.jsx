@@ -17,6 +17,18 @@ export default function SleepLogForm({ onLogSleep }) {
   const [quality, setQuality] = useState(3);
   const [notes, setNotes] = useState('');
 
+  // Auto-calculate quality based on hours
+  useEffect(() => {
+    if (hours) {
+      const h = Number(hours);
+      if (h >= 7 && h <= 9) setQuality(5);
+      else if (h >= 6 && h < 7) setQuality(4);
+      else if (h >= 5 && h < 6) setQuality(3);
+      else if (h >= 4 && h < 5) setQuality(2);
+      else setQuality(1);
+    }
+  }, [hours]);
+
   useEffect(() => {
     if (bedtime && wakeupTime) {
       const [bedHour, bedMin] = bedtime.split(':').map(Number);

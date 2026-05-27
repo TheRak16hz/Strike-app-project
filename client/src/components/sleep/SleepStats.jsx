@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { Activity, Star, Calendar } from 'lucide-react';
+import { Activity, Star, Calendar, Trash2, Edit2 } from 'lucide-react';
 
-export default function SleepStats({ stats, settings, logs }) {
+export default function SleepStats({ stats, settings, logs, onDeleteLog, onEditLog }) {
   const goal = settings.target_hours || 8;
   const isGoalMet = stats.avg_weekly >= goal;
 
@@ -65,6 +65,10 @@ export default function SleepStats({ stats, settings, logs }) {
                       {[...Array(log.quality)].map((_, j) => <Star key={j} size={10} color="#f59e0b" fill="#f59e0b" />)}
                     </div>
                   </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginLeft: '0.8rem' }}>
+                    <button onClick={() => onEditLog && onEditLog(log)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.3rem' }}><Edit2 size={14}/></button>
+                    <button onClick={() => onDeleteLog && onDeleteLog(log.id)} style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.3rem' }}><Trash2 size={14}/></button>
+                  </div>
                 </div>
               );
             })
@@ -80,4 +84,6 @@ SleepStats.propTypes = {
   stats: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   logs: PropTypes.array.isRequired,
+  onDeleteLog: PropTypes.func,
+  onEditLog: PropTypes.func
 };

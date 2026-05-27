@@ -22,5 +22,7 @@ router.delete('/routines/:id', trainingController.deleteRoutine);
 // Workout Logs
 router.get('/logs', trainingController.getLogs);
 router.post('/logs', trainingController.logWorkout);
+router.delete('/logs/:id', trainingController.deleteWorkoutLog);
+router.delete('/logs/all', trainingController.deleteAllWorkoutLogs);
 
 module.exports = router;

@@ -85,21 +85,24 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
 
       {/* Header Card */}
       <div
-        className="glass-panel"
+        className="glass-panel budgets-header-card"
         style={{
           padding: '1.5rem 2rem',
           display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
           justifyContent: 'space-between',
           alignItems: 'center',
           background: 'linear-gradient(135deg, rgba(var(--primary-rgb),0.08), rgba(var(--primary-rgb),0.02))',
           border: '1px solid rgba(var(--primary-rgb),0.15)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 100%' }}>
           <div
             style={{
               width: '50px',
               height: '50px',
+              flexShrink: 0,
               borderRadius: '14px',
               background: 'rgba(var(--primary-rgb),0.12)',
               display: 'flex',
@@ -109,8 +112,8 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           >
             <TrendingUp size={24} color="var(--primary)" />
           </div>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800 }}>Presupuesto Mensual</h2>
+          <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+            <h2 className="budgets-header-title" style={{ margin: 0, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Presupuesto Mensual</h2>
             <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
               ${totalSpent.toFixed(2)} gastado de ${totalBudget.toFixed(2)} USD
             </p>
@@ -223,13 +226,7 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
       )}
 
       {/* Category Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-          gap: '1rem',
-        }}
-      >
+      <div className="budgets-category-grid">
         {categories.map(catObj => {
           const cat = catObj.id;
           const budget = Number(localBudgets[cat]) || 0;
@@ -346,6 +343,30 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           </p>
         </div>
       )}
+      
+      <style>{`
+        .budgets-category-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          gap: 1rem;
+        }
+        .budgets-header-title {
+          font-size: 1.25rem;
+        }
+        @media (max-width: 480px) {
+          .budgets-header-card {
+            padding: 1rem !important;
+            flex-direction: column;
+            align-items: stretch !important;
+          }
+          .budgets-header-title {
+            font-size: 1.1rem;
+          }
+          .budgets-category-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 }

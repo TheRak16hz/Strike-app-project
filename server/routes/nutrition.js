@@ -17,5 +17,6 @@ router.post('/settings', auth, ctrl.saveSettings);
 router.get('/profile', auth, ctrl.getProfile);
 router.post('/profile', auth, ctrl.saveProfile);
 router.get('/bmi', auth, ctrl.getBmi);
+router.delete('/all', auth, ctrl.deleteAllNutritionLogs);
 
 module.exports = router;
