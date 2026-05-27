@@ -15,12 +15,23 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: ['https://strike-app-project.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-timezone', 'Accept']
-}));
+app.use((req, res, next) => {
+  const allowedOrigins = ['https://strike-app-project.vercel.app', 'http://localhost:5173', 'http://localhost:3000'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization,x-timezone,Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 app.use(express.json());
 
 // // Database Migrations (Sequenced)
