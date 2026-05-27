@@ -20,7 +20,7 @@ import MonthlyReportModal from '../components/finance/modals/MonthlyReportModal'
 const TABS = [
   { key: 'overview', label: '💰 Finanzas', title: 'Dashboard financiero' },
   { key: 'budgets', label: '📊 Presupuestos', title: 'Presupuestos mensuales por categoría' },
-  { key: 'rates', label: '💱 Tasas', title: 'Tasas de cambio y calculadora' },
+  { key: 'rates', label: '💱 Tasa', title: 'Tasas de cambio y calculadora' },
 ];
 
 export default function Finance() {

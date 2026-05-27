@@ -16,9 +16,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: '*', // En producción puedes cambiarlo por la URL de tu frontend
+  origin: ['https://strike-app-project.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-timezone']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-timezone', 'Accept']
 }));
 app.use(express.json());
 
