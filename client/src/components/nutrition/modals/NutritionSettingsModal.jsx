@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { X, Save, Settings, AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { nutritionService } from '../../../services/nutritionService';
 
 export default function NutritionSettingsModal({ show, onClose, settings, onSave }) {
   const [localSettings, setLocalSettings] = useState({
@@ -101,15 +100,9 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
             </div>
             <button 
               type="button"
-              onClick={async () => {
-                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu historial de nutrición y consumos.')) {
-                   try {
-                     await nutritionService.deleteAllNutritionLogs();
-                     toast.success('Todo el historial de nutrición ha sido borrado');
-                     window.location.reload();
-                   } catch (err) {
-                     toast.error('Error al borrar el historial');
-                   }
+              onClick={() => {
+                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu historial de nutrición.')) {
+                   toast.error('Funcionalidad en desarrollo para API de nutrición');
                 }
               }} 
               className="btn-primary" 

@@ -41,22 +41,6 @@ export default function Sleep() {
     }
   };
 
-  const handleDeleteLog = async (id) => {
-    if (!window.confirm('¿Seguro que deseas eliminar este registro?')) return;
-    try {
-      await sleepService.deleteSleepLog(id);
-      toast.success('Registro eliminado');
-      loadData();
-    } catch (err) {
-      toast.error('Error al eliminar registro');
-    }
-  };
-
-  const handleEditLog = (log) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast('Función de edición rápida próximamente. Por ahora, elimina y vuelve a registrar.', { icon: 'ℹ️' });
-  };
-
   const handleSaveSettings = async (settingsData) => {
     try {
       const newSettings = await sleepService.saveSettings(settingsData);
@@ -95,15 +79,9 @@ export default function Sleep() {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <SleepLogForm onLogSleep={handleLogSleep} />
-        <SleepStats 
-          stats={data.stats} 
-          settings={data.settings} 
-          logs={data.logs} 
-          onDeleteLog={handleDeleteLog}
-          onEditLog={handleEditLog}
-        />
+        <SleepStats stats={data.stats} settings={data.settings} logs={data.logs} />
       </div>
 
       <SleepSettingsModal 

@@ -30,12 +30,6 @@ export const nutritionService = {
     return res.json();
   },
 
-  deleteAllNutritionLogs: async () => {
-    const res = await fetch(`${API}/api/nutrition/all`, { method: 'DELETE', headers: getHeaders() });
-    if (!res.ok) throw new Error('Error al eliminar todos los registros');
-    return res.json();
-  },
-
   // Food logs
   logFood: async (data) => {
     const res = await fetch(`${API}/api/nutrition/food`, { method: 'POST', headers: getHeaders(), body: JSON.stringify(data) });

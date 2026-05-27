@@ -115,19 +115,6 @@ exports.deleteSleepLog = async (req, res) => {
 };
 
 // ========================
-// DELETE /api/sleep/all
-// ========================
-exports.deleteAllSleepLogs = async (req, res) => {
-  try {
-    await db.query('DELETE FROM sleep_logs WHERE user_id = $1', [req.user.id]);
-    res.json({ success: true, message: 'Todos los registros de sueño eliminados' });
-  } catch (err) {
-    console.error('Error deleteAllSleepLogs:', err);
-    res.status(500).json({ error: 'Error al eliminar todos los registros' });
-  }
-};
-
-// ========================
 // POST /api/sleep/settings
 // ========================
 exports.saveSettings = async (req, res) => {

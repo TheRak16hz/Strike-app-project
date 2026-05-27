@@ -294,21 +294,3 @@ exports.getBmi = async (req, res) => {
     res.status(500).json({ error: 'Error al calcular IMC' });
   }
 };
-
-// ========================
-// DELETE /api/nutrition/all
-// ========================
-exports.deleteAllNutritionLogs = async (req, res) => {
-  try {
-    await db.query('BEGIN');
-    await db.query('DELETE FROM food_logs WHERE user_id = $1', [req.user.id]);
-    await db.query('DELETE FROM water_logs WHERE user_id = $1', [req.user.id]);
-    await db.query('DELETE FROM caffeine_logs WHERE user_id = $1', [req.user.id]);
-    await db.query('COMMIT');
-    res.json({ success: true, message: 'Todos los registros de nutrición eliminados' });
-  } catch (err) {
-    await db.query('ROLLBACK');
-    console.error('Error deleteAllNutritionLogs:', err);
-    res.status(500).json({ error: 'Error al eliminar todos los registros' });
-  }
-};

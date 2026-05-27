@@ -97,7 +97,7 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           border: '1px solid rgba(var(--primary-rgb),0.15)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 min-content' }}>
           <div
             style={{
               width: '50px',
@@ -112,8 +112,8 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           >
             <TrendingUp size={24} color="var(--primary)" />
           </div>
-          <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-            <h2 className="budgets-header-title" style={{ margin: 0, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Presupuesto Mensual</h2>
+          <div>
+            <h2 className="budgets-header-title" style={{ margin: 0, fontWeight: 800 }}>Presupuesto Mensual</h2>
             <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
               ${totalSpent.toFixed(2)} gastado de ${totalBudget.toFixed(2)} USD
             </p>

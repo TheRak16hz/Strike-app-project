@@ -71,15 +71,6 @@ export const trainingService = {
     return res.json();
   },
 
-  deleteAllWorkoutLogs: async () => {
-    const res = await fetch(`${API_URL}/logs/all`, {
-      method: 'DELETE',
-      headers: getAuthHeader()
-    });
-    if (!res.ok) throw new Error('Error al eliminar todos los registros');
-    return res.json();
-  },
-
   getLogs: async () => {
     const res = await fetch(`${API_URL}/logs`, { headers: getAuthHeader() });
     if (!res.ok) throw new Error('Error al obtener el historial');

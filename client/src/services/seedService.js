@@ -22,14 +22,3 @@ export const logSeedEvent = async (token, status, date) => {
   if (!res.ok) throw new Error('Error al registrar evento');
   return res.json();
 };
-
-export const deleteAllSeedLogs = async (token) => {
-  const res = await fetch(`${API_URL}/api/seed/all`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-  if (!res.ok) throw new Error('Error al eliminar todos los registros');
-  return res.json();
-};

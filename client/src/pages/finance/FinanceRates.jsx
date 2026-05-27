@@ -305,7 +305,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                 onChange={e => setCalc(prev => ({ ...prev, amount: e.target.value }))}
                 style={{
                   flex: '1 1 auto',
-                  minWidth: '100px',
+                  width: 0,
                   padding: '0.9rem 1rem',
                   background: 'rgba(var(--primary-rgb),0.06)',
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
@@ -370,7 +370,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
               <div
                 style={{
                   flex: '1 1 auto',
-                  minWidth: '100px',
+                  width: 0,
                   padding: '0.9rem 1rem',
                   background: 'rgba(var(--primary-rgb),0.07)',
                   border: '1px solid rgba(var(--primary-rgb),0.15)',

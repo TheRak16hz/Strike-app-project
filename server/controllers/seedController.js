@@ -104,16 +104,3 @@ exports.logEvent = async (req, res) => {
     res.status(500).json({ error: 'Error al registrar evento' });
   }
 };
-
-// ========================
-// DELETE /api/seed/all
-// ========================
-exports.deleteAllSeedLogs = async (req, res) => {
-  try {
-    await db.query('DELETE FROM seed_logs WHERE user_id = $1', [req.user.id]);
-    res.json({ success: true, message: 'Todos los registros de seed eliminados' });
-  } catch (err) {
-    console.error('Error deleteAllSeedLogs:', err);
-    res.status(500).json({ error: 'Error al eliminar todos los registros' });
-  }
-};

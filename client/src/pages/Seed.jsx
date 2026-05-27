@@ -62,21 +62,6 @@ export default function Seed() {
     }
   };
 
-  const handleDeleteAll = async () => {
-    if (!window.confirm('🚨 ¡PELIGRO! 🚨\n\n¿Estás seguro de que deseas eliminar TODOS los registros de Seed?\n\nEsta acción NO se puede deshacer y perderás todo tu progreso y rachas.')) return;
-    
-    try {
-      setLoading(true);
-      const { deleteAllSeedLogs } = await import('../services/seedService');
-      await deleteAllSeedLogs(token);
-      toast.success('Todos los registros han sido eliminados');
-      loadData();
-    } catch (err) {
-      toast.error('Error al eliminar los registros');
-      setLoading(false);
-    }
-  };
-
   const handleDayClick = (day) => {
     setSelectedDateToEdit(day);
   };
@@ -175,21 +160,6 @@ export default function Seed() {
         color: 'var(--text-secondary)'
       }}>
         "{quote}"
-      </div>
-
-      <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '16px' }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', color: '#ef4444', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          Zona de Peligro
-        </h3>
-        <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Elimina permanentemente todo tu historial y progreso de este módulo.
-        </p>
-        <button 
-          onClick={handleDeleteAll}
-          style={{ width: '100%', padding: '0.8rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}
-        >
-          Borrar todos los registros
-        </button>
       </div>
 
       {selectedDateToEdit && (
