@@ -1,10 +1,12 @@
 const db = require('../db');
 const https = require('https');
+const http = require('http');
 
-// --- Helper: Fetch JSON from URL ---
+// --- Helper: Fetch JSON from URL (GET) ---
 function fetchJSON(url) {
+  const lib = url.startsWith('https') ? https : http;
   return new Promise((resolve, reject) => {
-    https.get(url, {
+    lib.get(url, {
       headers: {
         'User-Agent': 'Strike-App/1.0 (personal finance app)',
         'Accept': 'application/json',
@@ -19,6 +21,63 @@ function fetchJSON(url) {
       });
     }).on('error', reject).on('timeout', () => reject(new Error('Timeout')));
   });
+}
+
+// --- Helper: POST JSON (for Binance P2P) ---
+function postJSON(url, body) {
+  return new Promise((resolve, reject) => {
+    const payload = JSON.stringify(body);
+    const parsed = new URL(url);
+    const options = {
+      hostname: parsed.hostname,
+      port: parsed.port || 443,
+      path: parsed.pathname + parsed.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': '*/*',
+      },
+      timeout: 10000,
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(new Error('JSON parse error')); }
+      });
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
+    req.write(payload);
+    req.end();
+  });
+}
+
+// --- Helper: Fetch Binance P2P average (top 10 buy USDT/VES) ---
+async function fetchBinanceP2PRate() {
+  const body = {
+    fiat: 'VES',
+    page: 1,
+    rows: 10,
+    tradeType: 'BUY',
+    asset: 'USDT',
+    countries: [],
+    proMerchantAds: false,
+    shieldMerchantAds: false,
+    publisherType: null,
+    payTypes: [],
+  };
+  const result = await postJSON('https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search', body);
+  if (!result?.data || !Array.isArray(result.data) || result.data.length === 0) {
+    throw new Error('No data from Binance P2P');
+  }
+  const prices = result.data.map(ad => parseFloat(ad.adv?.price)).filter(p => !isNaN(p) && p > 0);
+  if (prices.length === 0) throw new Error('No valid prices from Binance P2P');
+  const avg = prices.reduce((s, p) => s + p, 0) / prices.length;
+  return parseFloat(avg.toFixed(2));
 }
 
 // --- Fetch global app metadata ---
@@ -57,10 +116,11 @@ exports.fetchLiveRates = async (req, res) => {
       });
     }
 
-    const [bcvData, paraleloData, euroBcvData] = await Promise.allSettled([
+    const [bcvData, paraleloData, euroBcvData, binanceP2P] = await Promise.allSettled([
       fetchJSON('https://ve.dolarapi.com/v1/dolares/oficial'),
       fetchJSON('https://ve.dolarapi.com/v1/dolares/paralelo'),
       fetchJSON('https://ve.dolarapi.com/v1/euros/oficial'),
+      fetchBinanceP2PRate(),
     ]);
 
     const newRates = { ...currentRates };
@@ -71,9 +131,13 @@ exports.fetchLiveRates = async (req, res) => {
       updates.bcv = { value: newRates.usd_bs_bcv, date: bcvData.value.fechaActualizacion };
     }
 
-    if (paraleloData.status === 'fulfilled' && paraleloData.value?.promedio) {
+    // Paralelo: prefer Binance P2P average, fallback to dolarapi
+    if (binanceP2P.status === 'fulfilled' && binanceP2P.value > 0) {
+      newRates.usd_bs = binanceP2P.value;
+      updates.paralelo = { value: newRates.usd_bs, source: 'Binance P2P (top 10 avg)' };
+    } else if (paraleloData.status === 'fulfilled' && paraleloData.value?.promedio) {
       newRates.usd_bs = parseFloat(paraleloData.value.promedio.toFixed(2));
-      updates.paralelo = { value: newRates.usd_bs, date: paraleloData.value.fechaActualizacion };
+      updates.paralelo = { value: newRates.usd_bs, source: 'DolarApi (fallback)', date: paraleloData.value.fechaActualizacion };
     }
 
     if (euroBcvData.status === 'fulfilled' && euroBcvData.value?.promedio) {

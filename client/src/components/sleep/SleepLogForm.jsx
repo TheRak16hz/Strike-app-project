@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Moon, Sun, Star } from 'lucide-react';
+import { Moon, Sun, Star, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+function getYesterdayDate() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toLocaleDateString('en-CA'); // YYYY-MM-DD
+}
+
 export default function SleepLogForm({ onLogSleep }) {
+  const [logDate, setLogDate] = useState(getYesterdayDate());
   const [hours, setHours] = useState('');
   const [bedtime, setBedtime] = useState('');
   const [wakeupTime, setWakeupTime] = useState('');
@@ -30,10 +37,11 @@ export default function SleepLogForm({ onLogSleep }) {
     if (!hours || isNaN(hours)) {
       return toast.error('Ingresa las horas de sueño');
     }
-    onLogSleep({ hours: Number(hours), bedtime, wakeup_time: wakeupTime, quality, notes });
+    onLogSleep({ log_date: logDate, hours: Number(hours), bedtime, wakeup_time: wakeupTime, quality, notes });
     toast.success('Sueño registrado');
     
     // Reset but keep quality at 3
+    setLogDate(getYesterdayDate());
     setHours('');
     setBedtime('');
     setWakeupTime('');
@@ -44,11 +52,17 @@ export default function SleepLogForm({ onLogSleep }) {
   return (
     <div className="glass-panel" style={{ padding: '1.5rem' }}>
       <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#8b5cf6' }}>
-        <Moon size={20} /> Registrar Sueño (Anoche)
+        <Moon size={20} /> Registrar Sueño
       </h3>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
+        <div className="form-group" style={{ minWidth: 0 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Calendar size={14} opacity={0.7}/> Fecha del registro</label>
+          <input type="date" value={logDate} onChange={e => setLogDate(e.target.value)} max={new Date().toLocaleDateString('en-CA')} style={{ width: '100%', boxSizing: 'border-box' }} />
+          <span style={{ fontSize: '0.75rem', opacity: 0.45, marginTop: '0.25rem' }}>Por defecto: ayer</span>
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem' }}>
           <div className="form-group" style={{ minWidth: 0 }}>
             <label>Horas Totales</label>

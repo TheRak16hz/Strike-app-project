@@ -1,8 +1,8 @@
 {
-    "env": {
-        "ANTHROPIC_BASE_URL": "https://opencode.ai/zen",
-        "ANTHROPIC_MODEL": "minimax-m2.5-free",
-        "ANTHROPIC_API_KEY": "sk-mJo8NzmWEsNp4N4UnFDuYyp83igdxDp3XYmFMz1E6tXmruGaddmwrCrM1RfKGF8H",
-        "ENABLE_TOOL_SEARCH": "true"
-    }
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://opencode.ai/zen",
+    "ANTHROPIC_MODEL": "minimax-m2.5-free",
+    "ANTHROPIC_API_KEY": "sk-mJo8NzmWEsNp4N4UnFDuYyp83igdxDp3XYmFMz1E6tXmruGaddmwrCrM1RfKGF8H",
+    "ENABLE_TOOL_SEARCH": "true"
+  }
 }

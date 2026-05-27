@@ -184,15 +184,16 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
         )}
 
         {/* Cards grid (2+3 Layout) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1rem' }}>
+        <div className="rates-card-grid">
           {rateConfigs.map((cfg, idx) => {
             const isEditing = editingKey === cfg.key;
             const value = rates[cfg.key];
             const span = idx < 2 ? 'span 3' : 'span 2'; // First 2 span 3 cols (2 per row), next 3 span 2 cols (3 per row)
+            const mobileClass = 'rate-card-item';
             return (
               <div
                 key={cfg.key}
-                className="glass-panel"
+                className={`glass-panel ${mobileClass}`}
                 style={{
                   gridColumn: span,
                   padding: '1.2rem',
@@ -261,7 +262,8 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                   </div>
                 ) : (
                   <div
-                    style={{ fontWeight: 900, fontSize: '1.5rem', color: cfg.color, letterSpacing: '-0.03em', cursor: 'pointer' }}
+                    className="rate-card-value"
+                    style={{ fontWeight: 900, color: cfg.color, letterSpacing: '-0.03em', cursor: 'pointer' }}
                     onClick={() => startEdit(cfg.key, value)}
                     title="Clic para editar"
                   >
@@ -309,7 +311,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
                   borderRadius: '12px',
                   color: 'var(--text-primary)',
-                  fontSize: '1.5rem',
+                  fontSize: '1.2rem',
                   fontWeight: 800,
                   boxSizing: 'border-box',
                 }}
@@ -373,7 +375,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                   background: 'rgba(var(--primary-rgb),0.07)',
                   border: '1px solid rgba(var(--primary-rgb),0.15)',
                   borderRadius: '12px',
-                  fontSize: '1.6rem',
+                  fontSize: '1.3rem',
                   fontWeight: 900,
                   color: 'var(--primary)',
                   letterSpacing: '-0.02em',
@@ -418,6 +420,30 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .rates-card-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 1rem;
+        }
+        .rate-card-value {
+          font-size: 1.5rem;
+        }
+        @media (max-width: 520px) {
+          .rates-card-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+          .rate-card-item {
+            grid-column: span 1 !important;
+          }
+          .rate-card-value {
+            font-size: 1.15rem !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .rates-card-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
     </div>
   );

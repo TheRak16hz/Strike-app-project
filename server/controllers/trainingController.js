@@ -35,16 +35,15 @@ exports.updateExercise = async (req, res) => {
         const { id } = req.params;
         const { name, zone, muscle, equipment, is_compound, calories_per_rep, description } = req.body;
         
-        // In this version, we allow the user to update any exercise (including global ones)
-        // Since it's a personal productivity app environment.
+        // Only allow updating exercises owned by the current user (not global presets)
         const result = await db.query(
             `UPDATE exercises_library 
              SET name = $1, zone = $2, muscle = $3, equipment = $4, is_compound = $5, calories_per_rep = $6, description = $7
-             WHERE id = $8 RETURNING *`,
-            [name, zone, muscle, equipment, is_compound, calories_per_rep, description, id]
+             WHERE id = $8 AND user_id = $9 RETURNING *`,
+            [name, zone, muscle, equipment, is_compound, calories_per_rep, description, id, req.user.id]
         );
 
-        if (result.rows.length === 0) return res.status(404).json({ error: 'Ejercicio no encontrado' });
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Ejercicio no encontrado o no tienes permiso para editarlo' });
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err.message);
@@ -55,11 +54,12 @@ exports.updateExercise = async (req, res) => {
 exports.deleteExercise = async (req, res) => {
     try {
         const { id } = req.params;
+        // Only allow deleting exercises owned by the current user (not global presets)
         const result = await db.query(
-            'DELETE FROM exercises_library WHERE id = $1 RETURNING id',
-            [id]
+            'DELETE FROM exercises_library WHERE id = $1 AND user_id = $2 RETURNING id',
+            [id, req.user.id]
         );
-        if (result.rows.length === 0) return res.status(404).json({ error: 'Ejercicio no encontrado' });
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Ejercicio no encontrado o no tienes permiso para eliminarlo' });
         res.json({ message: 'Ejercicio eliminado' });
     } catch (err) {
         console.error(err.message);

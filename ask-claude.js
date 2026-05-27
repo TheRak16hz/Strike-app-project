@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 const anthropic = new Anthropic({
-    apiKey: 'TU_API_KEY_REAL_AQUI',
+    apiKey: 'sk-mJo8NzmWEsNp4N4UnFDuYyp83igdxDp3XYmFMz1E6tXmruGaddmwrCrM1RfKGF8H',
 });
 
 async function main() {

@@ -19,13 +19,30 @@ export default function WeeklyTracker({ logs, onDayClick }) {
 
   const days = getDaysOfWeek();
 
+  const toLocalDateString = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const getLogDateString = (logDateVal) => {
+    if (!logDateVal) return '';
+    try {
+      const d = new Date(logDateVal);
+      const year = d.getUTCFullYear();
+      const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch (e) {
+      return '';
+    }
+  };
+
   const getStatusForDay = (date) => {
-    const log = logs.find(l => {
-      const logDate = new Date(l.log_date);
-      logDate.setHours(0,0,0,0);
-      return logDate.getTime() === date.getTime();
-    });
-    return log ? log.status : null; // 'clean' or 'relapse'
+    const dateStr = toLocalDateString(date);
+    const log = logs.find(l => getLogDateString(l.log_date) === dateStr);
+    return log ? log.status : null;
   };
 
   const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -43,7 +60,7 @@ export default function WeeklyTracker({ logs, onDayClick }) {
     }}>
       {days.map((day, idx) => {
         const status = getStatusForDay(day);
-        const isToday = day.getTime() === new Date(new Date().setHours(0,0,0,0)).getTime();
+        const isToday = toLocalDateString(day) === toLocalDateString(new Date());
         
         let Icon = null;
         if (status === 'clean') {

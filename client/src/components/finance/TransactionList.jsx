@@ -69,7 +69,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
          </div>
        </div>
 
-       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '0.6rem', maxHeight: '280px', overflowY: 'auto', paddingRight: '0.25rem' }}>
+       <div className="tx-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '0.6rem', maxHeight: '400px', overflowY: 'auto', paddingRight: '0.25rem', WebkitOverflowScrolling: 'touch' }}>
          {filteredTransactions.length === 0 ? (
            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', opacity: 0.5, fontSize: '0.85rem' }}>No hay movimientos</div>
          ) : (
@@ -94,14 +94,23 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                    {t.type === 'income' ? '+' : '-'}${Number(t.amount).toLocaleString()}
                  </div>
                </div>
-               <div style={{ display: 'flex', gap: '0.2rem', marginLeft: '0.5rem' }}>
-                 <button onClick={() => onEdit(t)} className="theme-toggle" style={{ padding: '0.3rem' }}><Edit2 size={12} /></button>
-                 <button onClick={() => onDelete(t.id)} className="delete-btn-subtle" style={{ padding: '0.3rem' }}><Trash2 size={12} /></button>
-               </div>
+                <div style={{ display: 'flex', gap: '0.3rem', marginLeft: '0.5rem', flexShrink: 0 }}>
+                 <button onClick={() => onEdit(t)} className="theme-toggle" style={{ padding: '0.4rem', minWidth: '28px', minHeight: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Edit2 size={13} /></button>
+                 <button onClick={() => onDelete(t.id)} style={{ padding: '0.4rem', minWidth: '28px', minHeight: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', borderRadius: '8px', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={13} /></button>
+                </div>
              </div>
            ))
          )}
        </div>
+
+       <style>{`
+         @media (max-width: 520px) {
+           .tx-card-grid {
+             grid-template-columns: 1fr !important;
+             max-height: none !important;
+           }
+         }
+       `}</style>
     </section>
   );
 }

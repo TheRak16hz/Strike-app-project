@@ -14,6 +14,13 @@ const QUOTES = [
   "El dominio de la mente es el principio de la fuerza."
 ];
 
+const toLocalDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function Seed() {
   const { user, token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -171,8 +178,7 @@ export default function Seed() {
                 className="btn-primary" 
                 style={{ background: 'var(--brand-green)' }}
                 onClick={() => {
-                  const localDate = new Date(selectedDateToEdit.getTime() - (selectedDateToEdit.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-                  handleLog('clean', localDate);
+                  handleLog('clean', toLocalDateString(selectedDateToEdit));
                 }}
               >
                 Mantuve el control ✅
@@ -181,8 +187,7 @@ export default function Seed() {
                 className="btn-primary" 
                 style={{ background: 'var(--danger)' }}
                 onClick={() => {
-                  const localDate = new Date(selectedDateToEdit.getTime() - (selectedDateToEdit.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-                  handleLog('relapse', localDate);
+                  handleLog('relapse', toLocalDateString(selectedDateToEdit));
                 }}
               >
                 Tuve un fallo ❌
