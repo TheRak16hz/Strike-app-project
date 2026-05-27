@@ -296,7 +296,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
             <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Convertir de
             </label>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.7rem', flexWrap: 'wrap', alignItems: 'stretch' }}>
+            <div className="calc-inputs-wrapper">
               <input
                 id="calc-amount-input"
                 type="number"
@@ -318,10 +318,10 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
               />
               <select
                 id="calc-from-select"
+                className="calc-select"
                 value={calc.from}
                 onChange={e => setCalc(prev => ({ ...prev, from: e.target.value }))}
                 style={{
-                  flex: '1 1 148px',
                   padding: '0.9rem 0.8rem',
                   background: 'rgba(var(--primary-rgb),0.06)',
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
@@ -366,8 +366,9 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
             <label style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Resultado
             </label>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.7rem', flexWrap: 'wrap', alignItems: 'stretch' }}>
+            <div className="calc-inputs-wrapper">
               <div
+                className="calc-result-box"
                 style={{
                   flex: '1 1 auto',
                   width: 0,
@@ -390,10 +391,10 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
               </div>
               <select
                 id="calc-to-select"
+                className="calc-select"
                 value={calc.to}
                 onChange={e => setCalc(prev => ({ ...prev, to: e.target.value }))}
                 style={{
-                  flex: '1 1 148px',
                   padding: '0.9rem 0.8rem',
                   background: 'rgba(var(--primary-rgb),0.06)',
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
@@ -428,6 +429,30 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
         .rate-card-value {
           font-size: 1.5rem;
         }
+        .calc-inputs-wrapper {
+          display: flex;
+          gap: 0.75rem;
+          margin-top: 0.7rem;
+          flex-wrap: nowrap;
+          align-items: stretch;
+        }
+        .calc-select {
+          flex: 0 0 130px;
+        }
+        .calc-result-box {
+          flex: 1 1 auto;
+          width: 0;
+          padding: 0.9rem 1rem;
+          background: rgba(var(--primary-rgb),0.07);
+          border: 1px solid rgba(var(--primary-rgb),0.15);
+          border-radius: 12px;
+          font-size: 1.3rem;
+          font-weight: 900;
+          color: var(--primary);
+          letter-spacing: -0.02em;
+          display: flex;
+          align-items: center;
+        }
         @media (max-width: 520px) {
           .rates-card-grid {
             grid-template-columns: 1fr 1fr !important;
@@ -437,6 +462,14 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
           }
           .rate-card-value {
             font-size: 1.15rem !important;
+          }
+          .calc-inputs-wrapper {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+          .calc-select {
+            flex: 1 1 auto;
+            width: 100%;
           }
         }
         @media (max-width: 360px) {

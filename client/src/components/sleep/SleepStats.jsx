@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { Activity, Star, Calendar } from 'lucide-react';
+import { Activity, Star, Calendar, Trash2 } from 'lucide-react';
 
-export default function SleepStats({ stats, settings, logs }) {
+export default function SleepStats({ stats, settings, logs, onDelete }) {
   const goal = settings.target_hours || 8;
   const isGoalMet = stats.avg_weekly >= goal;
 
@@ -54,16 +54,30 @@ export default function SleepStats({ stats, settings, logs }) {
             logs.map((log, i) => {
               const isGood = Number(log.hours) >= 7 && Number(log.hours) <= 9;
               return (
-                <div key={log.id || i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
+                <div key={log.id || i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', borderLeft: log.tag === 'siesta' ? '3px solid #f59e0b' : (log.tag === 'descanso' ? '3px solid #10b981' : '3px solid #8b5cf6') }}>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{new Date(log.log_date.split('T')[0] + 'T12:00:00Z').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{new Date(log.log_date.split('T')[0] + 'T12:00:00Z').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                      {log.tag && log.tag !== 'dormir' && (
+                        <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.4rem', borderRadius: '8px', background: log.tag === 'siesta' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(16, 185, 129, 0.2)', color: log.tag === 'siesta' ? '#f59e0b' : '#10b981', textTransform: 'uppercase', fontWeight: 800 }}>
+                          {log.tag}
+                        </span>
+                      )}
+                    </div>
                     <div style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.2rem' }}>{log.bedtime ? `${log.bedtime} - ${log.wakeup_time}` : 'Sin hora'}</div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>
-                    <div style={{ fontWeight: 800, color: isGood ? '#10b981' : (Number(log.hours) < 6 ? '#ef4444' : '#f59e0b') }}>{log.hours}h</div>
-                    <div style={{ display: 'flex', gap: '2px' }}>
-                      {[...Array(log.quality)].map((_, j) => <Star key={j} size={10} color="#f59e0b" fill="#f59e0b" />)}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>
+                      <div style={{ fontWeight: 800, color: isGood ? '#10b981' : (Number(log.hours) < 6 ? '#ef4444' : '#f59e0b') }}>{log.hours}h</div>
+                      <div style={{ display: 'flex', gap: '2px' }}>
+                        {[...Array(log.quality || 3)].map((_, j) => <Star key={j} size={10} color="#f59e0b" fill="#f59e0b" />)}
+                      </div>
                     </div>
+                    {onDelete && (
+                      <button onClick={() => onDelete(log.id)} style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '0.4rem' }}>
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -80,4 +94,5 @@ SleepStats.propTypes = {
   stats: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   logs: PropTypes.array.isRequired,
+  onDelete: PropTypes.func
 };

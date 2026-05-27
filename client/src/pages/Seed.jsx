@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Leaf, RefreshCcw, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
-import { getSeedData, logSeedEvent } from '../services/seedService';
+import { getSeedData, logSeedEvent, deleteAllSeedData } from '../services/seedService';
 import SeedTree from '../components/seed/SeedTree';
 import WeeklyTracker from '../components/seed/WeeklyTracker';
 
@@ -59,6 +59,18 @@ export default function Seed() {
       setSelectedDateToEdit(null);
     } catch (err) {
       toast.error('Error al registrar');
+    }
+  };
+
+  const handleHardReset = async () => {
+    if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu progreso de retención permanentemente y no se puede recuperar.')) {
+      try {
+        await deleteAllSeedData(token);
+        toast.success('Progreso eliminado');
+        loadData();
+      } catch (err) {
+        toast.error('Error al reiniciar el progreso');
+      }
     }
   };
 
@@ -160,6 +172,20 @@ export default function Seed() {
         color: 'var(--text-secondary)'
       }}>
         "{quote}"
+      </div>
+
+      <div style={{ marginTop: '4rem', padding: '1.5rem', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '16px' }}>
+        <h3 style={{ fontSize: '0.9rem', color: 'var(--danger)', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 800 }}>Zona de Peligro</h3>
+        <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Esta acción borrará todo el historial del módulo Seed.</p>
+        <button 
+          onClick={handleHardReset}
+          style={{
+            width: '100%', padding: '1rem', background: 'var(--danger)', color: '#fff', 
+            border: 'none', borderRadius: '12px', fontWeight: 700, cursor: 'pointer'
+          }}
+        >
+          Borrar Todo el Historial
+        </button>
       </div>
 
       {selectedDateToEdit && (

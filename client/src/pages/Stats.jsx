@@ -101,12 +101,8 @@ const calcSleepEfficiency = (sleepData) => {
   let totalScore = 0;
 
   recent.forEach(s => {
-    const durationMatch = (s.duration || '').match(/(\d+)h\s*(\d+)m/);
-    let hours = 0;
-    if (durationMatch) {
-      hours = parseInt(durationMatch[1]) + parseInt(durationMatch[2]) / 60;
-    }
-    const quality = Number(s.quality) || 0;
+    const hours = Number(s.hours) || 0;
+    const quality = Number(s.quality) || 3;
 
     // Duration score: how close to target (max 50 points)
     const durationRatio = Math.min(hours / targetHours, 1.2);

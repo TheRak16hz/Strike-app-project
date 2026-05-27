@@ -348,7 +348,7 @@ export default function Finance() {
   if (loading) return <div className="loading-state">Personalizando tu panel...</div>;
 
   return (
-    <div className="finance-page animate-fade-in" style={{ padding: '1.5rem', maxWidth: '1400px', margin: '0 auto', paddingBottom: '5rem' }}>
+    <div className="finance-page animate-fade-in" style={{ paddingBottom: '5rem' }}>
 
       <FinanceHeader
         onNewGoal={() => { setEditingItem(null); resetGoalForm(); setShowGoalForm(true); }}
@@ -359,6 +359,7 @@ export default function Finance() {
 
       {/* ====== TAB NAV ====== */}
       <div
+        className="finance-tabs-nav"
         style={{
           display: 'flex',
           gap: '0.35rem',
@@ -367,7 +368,10 @@ export default function Finance() {
           borderRadius: '14px',
           marginBottom: '1.5rem',
           width: 'fit-content',
+          maxWidth: '100%',
+          overflowX: 'auto',
           border: '1px solid rgba(255,255,255,0.06)',
+          WebkitOverflowScrolling: 'touch',
         }}
       >
         {TABS.map(tab => (
@@ -479,6 +483,23 @@ export default function Finance() {
         totals={totals}
         rates={rates}
       />
+
+      <style>{`
+        .finance-page {
+          padding: 1.5rem;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+          .finance-page {
+            padding: 0.75rem;
+            padding-bottom: 5rem;
+          }
+          .finance-tabs-nav {
+            padding-bottom: 0.5rem !important; /* give room for scrollbar */
+          }
+        }
+      `}</style>
     </div>
   );
 }

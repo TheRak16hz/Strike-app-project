@@ -294,3 +294,19 @@ exports.getBmi = async (req, res) => {
     res.status(500).json({ error: 'Error al calcular IMC' });
   }
 };
+
+// --- Hard Reset ---
+exports.deleteAllData = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        await db.query('DELETE FROM food_library WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM food_logs WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM water_logs WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM caffeine_logs WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM nutrition_settings WHERE user_id = $1', [userId]);
+        res.json({ message: 'Todos los datos de nutrición han sido eliminados.' });
+    } catch (err) {
+        console.error('Error deleteAllData:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

@@ -14,6 +14,7 @@ router.delete('/water/:id', auth, ctrl.deleteWater);
 router.post('/caffeine', auth, ctrl.logCaffeine);
 router.delete('/caffeine/:id', auth, ctrl.deleteCaffeine);
 router.post('/settings', auth, ctrl.saveSettings);
+router.delete('/all', auth, ctrl.deleteAllData);
 router.get('/profile', auth, ctrl.getProfile);
 router.post('/profile', auth, ctrl.saveProfile);
 router.get('/bmi', auth, ctrl.getBmi);

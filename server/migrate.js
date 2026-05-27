@@ -15,6 +15,7 @@ async function run() {
     const financeSql = fs.readFileSync(path.join(__dirname, '../db/update_v4_finance_metadata.sql'), 'utf8');
     const seedSql = fs.readFileSync(path.join(__dirname, '../db/update_v5_seed.sql'), 'utf8');
     const gymSql = fs.readFileSync(path.join(__dirname, '../db/update_v6_gym.sql'), 'utf8');
+    const sleepTagsSql = fs.readFileSync(path.join(__dirname, '../db/update_v7_sleep_tags.sql'), 'utf8');
     
     console.log('Running nutrition migrations...');
     await pool.query(nutritionSql);
@@ -35,6 +36,10 @@ async function run() {
     console.log('Running gym migrations...');
     await pool.query(gymSql);
     console.log('Gym done.');
+
+    console.log('Running sleep tags migrations...');
+    await pool.query(sleepTagsSql);
+    console.log('Sleep tags done.');
 
     console.log('All migrations executed successfully.');
   } catch (err) {

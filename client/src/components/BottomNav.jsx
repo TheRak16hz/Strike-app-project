@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Wallet, Dumbbell, Settings, Plus, Apple, Moon, Leaf } from 'lucide-react';
+import { Home, Wallet, Dumbbell, Plus, Apple, Moon, Leaf } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../context/AuthContext';
 import './BottomNav.css';
@@ -18,7 +18,6 @@ export default function BottomNav({ onNewHabitClick, onFinanceAction }) {
   const isNutrition = location.pathname === '/nutrition';
   const isSleep = location.pathname === '/sleep';
   const isSeed = location.pathname === '/seed';
-  const isSettings = location.pathname === '/settings';
 
   const handleFloatingAction = () => {
     if (isHabits && onNewHabitClick) onNewHabitClick();
@@ -84,13 +83,6 @@ export default function BottomNav({ onNewHabitClick, onFinanceAction }) {
             <span>Seed</span>
           </button>
         )}
-        <button 
-          className={`bottom-nav-item ${isSettings ? 'active' : ''}`}
-          onClick={() => navigate('/settings')}
-        >
-          <Settings size={20} />
-          <span>Ajustes</span>
-        </button>
       </nav>
     </>
   );

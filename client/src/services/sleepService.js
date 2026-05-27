@@ -34,5 +34,11 @@ export const sleepService = {
     const res = await fetch(`${API}/api/sleep/settings`, { method: 'POST', headers: getHeaders(), body: JSON.stringify(data) });
     if (!res.ok) throw new Error('Error al guardar configuración');
     return res.json();
+  },
+
+  deleteAllData: async () => {
+    const res = await fetch(`${API}/api/sleep/all`, { method: 'DELETE', headers: getHeaders() });
+    if (!res.ok) throw new Error('Error al eliminar datos');
+    return res.json();
   }
 };

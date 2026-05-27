@@ -41,6 +41,28 @@ export default function Sleep() {
     }
   };
 
+  const handleDeleteLog = async (id) => {
+    if (window.confirm('¿Eliminar este registro?')) {
+      try {
+        await sleepService.deleteSleepLog(id);
+        toast.success('Registro eliminado');
+        loadData();
+      } catch (err) {
+        toast.error('Error al eliminar');
+      }
+    }
+  };
+
+  const handleEditLog = async (id, updatedData) => {
+    try {
+      await sleepService.updateSleepLog(id, updatedData);
+      toast.success('Registro actualizado');
+      loadData();
+    } catch (err) {
+      toast.error('Error al actualizar');
+    }
+  };
+
   const handleSaveSettings = async (settingsData) => {
     try {
       const newSettings = await sleepService.saveSettings(settingsData);
@@ -81,7 +103,13 @@ export default function Sleep() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <SleepLogForm onLogSleep={handleLogSleep} />
-        <SleepStats stats={data.stats} settings={data.settings} logs={data.logs} />
+        <SleepStats 
+          stats={data.stats} 
+          settings={data.settings} 
+          logs={data.logs} 
+          onDelete={handleDeleteLog} 
+          onEdit={handleEditLog} 
+        />
       </div>
 
       <SleepSettingsModal 

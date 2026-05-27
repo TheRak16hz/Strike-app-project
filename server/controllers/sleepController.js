@@ -61,20 +61,26 @@ exports.getSleepData = async (req, res) => {
 // ========================
 exports.logSleep = async (req, res) => {
   try {
-    const { log_date, hours, bedtime, wakeup_time, quality, notes } = req.body;
+    const { log_date, hours, bedtime, wakeup_time, quality, notes, tag } = req.body;
     const date = log_date || new Date().toLocaleDateString('en-CA', { timeZone: 'America/Caracas' });
+    const currentTag = tag || 'dormir';
+    
+    let calcQuality = quality || 3;
+    if (currentTag === 'dormir') {
+        const h = Number(hours);
+        if (h < 4) calcQuality = 1;
+        else if (h < 5) calcQuality = 2;
+        else if (h < 6.5) calcQuality = 3;
+        else if (h <= 8) calcQuality = 4;
+        else calcQuality = 5;
+    } else {
+        calcQuality = quality || 3;
+    }
 
     const result = await db.query(
-      `INSERT INTO sleep_logs (user_id, log_date, hours, bedtime, wakeup_time, quality, notes)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       ON CONFLICT (user_id, log_date) DO UPDATE SET
-         hours = EXCLUDED.hours,
-         bedtime = EXCLUDED.bedtime,
-         wakeup_time = EXCLUDED.wakeup_time,
-         quality = EXCLUDED.quality,
-         notes = EXCLUDED.notes
-       RETURNING *`,
-      [req.user.id, date, hours, bedtime || null, wakeup_time || null, quality || 3, notes || null]
+      `INSERT INTO sleep_logs (user_id, log_date, hours, bedtime, wakeup_time, quality, notes, tag)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [req.user.id, date, hours, bedtime || null, wakeup_time || null, calcQuality, notes || null, currentTag]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -88,11 +94,25 @@ exports.logSleep = async (req, res) => {
 // ========================
 exports.updateSleepLog = async (req, res) => {
   try {
-    const { hours, bedtime, wakeup_time, quality, notes } = req.body;
+    const { hours, bedtime, wakeup_time, quality, notes, tag } = req.body;
+    const currentTag = tag || 'dormir';
+    
+    let calcQuality = quality || 3;
+    if (currentTag === 'dormir') {
+        const h = Number(hours);
+        if (h < 4) calcQuality = 1;
+        else if (h < 5) calcQuality = 2;
+        else if (h < 6.5) calcQuality = 3;
+        else if (h <= 8) calcQuality = 4;
+        else calcQuality = 5;
+    } else {
+        calcQuality = quality || 3;
+    }
+
     const result = await db.query(
-      `UPDATE sleep_logs SET hours = $1, bedtime = $2, wakeup_time = $3, quality = $4, notes = $5
-       WHERE id = $6 AND user_id = $7 RETURNING *`,
-      [hours, bedtime || null, wakeup_time || null, quality || 3, notes || null, req.params.id, req.user.id]
+      `UPDATE sleep_logs SET hours = $1, bedtime = $2, wakeup_time = $3, quality = $4, notes = $5, tag = $6
+       WHERE id = $7 AND user_id = $8 RETURNING *`,
+      [hours, bedtime || null, wakeup_time || null, calcQuality, notes || null, currentTag, req.params.id, req.user.id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -139,4 +159,17 @@ exports.saveSettings = async (req, res) => {
     console.error('Error saveSettings:', err);
     res.status(500).json({ error: 'Error al guardar configuración' });
   }
+};
+
+// --- Hard Reset ---
+exports.deleteAllData = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        await db.query('DELETE FROM sleep_logs WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM sleep_settings WHERE user_id = $1', [userId]);
+        res.json({ message: 'Todos los datos de sueño han sido eliminados.' });
+    } catch (err) {
+        console.error('Error deleteAllData:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };

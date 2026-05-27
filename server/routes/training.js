@@ -8,6 +8,8 @@ router.use(authMiddleware);
 
 // Base routes: /api/training
 
+router.delete('/all', trainingController.deleteAllData);
+
 // Exercise Library
 router.get('/library', trainingController.getExerciseLibrary);
 router.post('/library', trainingController.createExercise);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { X, Save, Settings, AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { sleepService } from '../../../services/sleepService';
 
 export default function SleepSettingsModal({ show, onClose, settings, onSave }) {
   const [localSettings, setLocalSettings] = useState({
@@ -75,9 +76,15 @@ export default function SleepSettingsModal({ show, onClose, settings, onSave }) 
             </div>
             <button 
               type="button"
-              onClick={() => {
-                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu historial de sueño.')) {
-                   toast.error('Funcionalidad en desarrollo para API de sueño');
+              onClick={async () => {
+                if (window.confirm('¿ESTÁS SEGURO? Se borrará todo tu historial de sueño y configuración.')) {
+                   try {
+                     await sleepService.deleteAllData();
+                     toast.success('Historial eliminado');
+                     window.location.reload();
+                   } catch (err) {
+                     toast.error('Error al reiniciar historial');
+                   }
                 }
               }} 
               className="btn-primary" 

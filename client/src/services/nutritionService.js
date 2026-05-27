@@ -90,5 +90,11 @@ export const nutritionService = {
     const res = await fetch(`${API}/api/nutrition/bmi`, { headers: getHeaders() });
     if (!res.ok) throw new Error('Error al calcular IMC');
     return res.json();
+  },
+
+  deleteAllData: async () => {
+    const res = await fetch(`${API}/api/nutrition/all`, { method: 'DELETE', headers: getHeaders() });
+    if (!res.ok) throw new Error('Error al eliminar datos');
+    return res.json();
   }
 };

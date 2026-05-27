@@ -5,5 +5,6 @@ const auth = require('../middleware/authMiddleware');
 
 router.get('/', auth, seedController.getSeedData);
 router.post('/log', auth, seedController.logEvent);
+router.delete('/all', auth, seedController.deleteAllData);
 
 module.exports = router;

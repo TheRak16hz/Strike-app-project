@@ -104,3 +104,18 @@ exports.logEvent = async (req, res) => {
     res.status(500).json({ error: 'Error al registrar evento' });
   }
 };
+
+exports.deleteAllData = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const userQuery = await db.query('SELECT username FROM users WHERE id = $1', [userId]);
+      if (userQuery.rows.length === 0 || userQuery.rows[0].username !== 'TheRak16hz') {
+          return res.status(403).json({ error: 'Acceso denegado.' });
+      }
+      await db.query('DELETE FROM seed_logs WHERE user_id = $1', [userId]);
+      res.json({ message: 'Todos los datos de seed han sido eliminados.' });
+  } catch (err) {
+      console.error('Error deleteAllData:', err);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};

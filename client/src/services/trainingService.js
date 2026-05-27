@@ -85,5 +85,14 @@ export const trainingService = {
     });
     if (!res.ok) throw new Error('Error al guardar el entrenamiento');
     return res.json();
+  },
+
+  deleteAllData: async () => {
+    const res = await fetch(`${API_URL}/all`, {
+      method: 'DELETE',
+      headers: getAuthHeader()
+    });
+    if (!res.ok) throw new Error('Error al eliminar datos');
+    return res.json();
   }
 };

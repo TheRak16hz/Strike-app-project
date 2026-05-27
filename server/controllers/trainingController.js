@@ -236,3 +236,17 @@ exports.getLogs = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el historial' });
   }
 };
+
+// --- Hard Reset ---
+exports.deleteAllData = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        await db.query('DELETE FROM exercises_library WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM workout_routines WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM workout_logs WHERE user_id = $1', [userId]);
+        res.json({ message: 'Todos los datos de gimnasio han sido eliminados.' });
+    } catch (err) {
+        console.error('Error al eliminar todos los datos de gimnasio:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
