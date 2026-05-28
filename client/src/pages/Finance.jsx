@@ -161,7 +161,7 @@ export default function Finance() {
   const convertToUSD = useCallback((amount, currency) => {
     const val = Number(amount) || 0;
     if (currency === 'USD' || currency === 'USDT') return val;
-    const rateKey = currency === 'BS' ? 'usd_bs'
+    const rateKey = (currency === 'BS' || currency === 'BS_P') ? 'usd_bs'
       : currency === 'BS_BCV' ? 'usd_bs_bcv'
       : currency === 'COP' ? 'usd_cop'
       : currency;

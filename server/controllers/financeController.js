@@ -245,7 +245,15 @@ exports.createTransaction = async (req, res) => {
       
       let amountInUSD = amount;
       if (currency !== 'USD') {
-        const rate = rates[currency] || 1;
+        const rateKey = (currency === 'BS' || currency === 'BS_P') ? 'usd_bs'
+          : currency === 'BS_BCV' ? 'usd_bs_bcv'
+          : currency === 'COP' ? 'usd_cop'
+          : currency;
+        
+        let rate = rates[rateKey] || 1;
+        if (currency === 'EUR') {
+          rate = (rates.usd_bs_bcv / (rates.eur_bs_bcv || 1)) || 1;
+        }
         amountInUSD = amount / rate;
       }
 
@@ -278,7 +286,24 @@ exports.deleteTransaction = async (req, res) => {
     
     const trans = transResult.rows[0];
     if (trans.goal_id) {
-      const amountToRevert = (trans.type === 'income' || trans.type === 'saving') ? -trans.amount : trans.amount;
+      const settingsResult = await db.query('SELECT settings FROM user_settings WHERE user_id = $1', [req.user.id]);
+      const rates = settingsResult.rows[0]?.settings?.exchange_rates || { usd_bs: 648, usd_bs_bcv: 474, usd_cop: 4200, bs_cop: 5, eur_bs_bcv: 570 };
+      
+      let amountInUSD = trans.amount;
+      if (trans.currency && trans.currency !== 'USD') {
+        const rateKey = (trans.currency === 'BS' || trans.currency === 'BS_P') ? 'usd_bs'
+          : trans.currency === 'BS_BCV' ? 'usd_bs_bcv'
+          : trans.currency === 'COP' ? 'usd_cop'
+          : trans.currency;
+        
+        let rate = rates[rateKey] || 1;
+        if (trans.currency === 'EUR') {
+          rate = (rates.usd_bs_bcv / (rates.eur_bs_bcv || 1)) || 1;
+        }
+        amountInUSD = trans.amount / rate;
+      }
+
+      const amountToRevert = (trans.type === 'income' || trans.type === 'saving') ? -amountInUSD : amountInUSD;
       await db.query(
         'UPDATE savings_goals SET current_amount = current_amount + $1 WHERE id = $2 AND user_id = $3',
         [amountToRevert, trans.goal_id, req.user.id]

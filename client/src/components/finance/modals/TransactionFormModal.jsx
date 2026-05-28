@@ -167,7 +167,7 @@ export default function TransactionFormModal({
         </div>
 
         {/* If goals is required or not forced to a single goal */}
-        {!forcedGoalId && (
+        {!forcedGoalId && isGoalRequired && (
           <div className="form-group" style={{ marginBottom: '2rem' }}>
             <label>{isGoalRequired ? 'Meta Asociada (Obligatoria)' : 'Meta Asociada (Opcional)'}</label>
             <select 
