@@ -59,16 +59,20 @@ export default function KpiCards({ totals, goalsCount }) {
           <div className="animate-scale" style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <div style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700 }}>USD/USDT</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>${((currencyBalances.USD || 0) + (currencyBalances.USDT || 0)).toLocaleString()}</div>
+                <div style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700 }}>USD (EFECTIVO)</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>${(currencyBalances.USD || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700 }}>USDT (DIGITAL)</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>${(currencyBalances.USDT || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               <div>
                 <div style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700 }}>BOLÍVARES (BS)</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>Bs. {(currencyBalances.BS || 0).toLocaleString()}</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>Bs. {((currencyBalances.BS || 0) + (currencyBalances.BS_P || 0) + (currencyBalances.BS_BCV || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               <div>
                 <div style={{ fontSize: '0.6rem', opacity: 0.5, fontWeight: 700 }}>PESOS (COP)</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>$ {(currencyBalances.COP || 0).toLocaleString()}</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>$ {(currencyBalances.COP || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { X, RefreshCcw, Calculator, TrendingUp, AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-export default function FinanceSettingsModal({ show, onClose, rates, budgets, onSave }) {
+export default function FinanceSettingsModal({ show, onClose, rates, budgets, onSave, categories = [] }) {
   const [localRates, setLocalRates] = useState({...rates});
   const [localBudgets, setLocalBudgets] = useState({...budgets});
   const [calc, setCalc] = useState({ amount: '', from: 'BS_P', to: 'USD', result: '0.00' });
@@ -15,7 +15,7 @@ export default function FinanceSettingsModal({ show, onClose, rates, budgets, on
     }
   }, [show, rates, budgets]);
 
-  const categories = ['Comida', 'Transporte', 'Servicios', 'Salud', 'Entretenimiento', 'Otros'];
+  // Se usan las categorías de presupuestos (tipo expense/both) recibidas dinámicamente
 
   const handleCalc = (amount, from, to) => {
     if (!amount || isNaN(amount)) return '0.00';
@@ -27,7 +27,7 @@ export default function FinanceSettingsModal({ show, onClose, rates, budgets, on
     const bs_cop = Number(rates.bs_cop || 5);
 
     let usdValue = 0;
-    if (from === 'USD') usdValue = val;
+    if (from === 'USD' || from === 'USDT') usdValue = val;
     else if (from === 'EUR') usdValue = val * (eur_bscv / usd_bscv);
     else if (from === 'BS_P') usdValue = val / usd_bs;
     else if (from === 'BS_BCV') usdValue = val / usd_bscv;
@@ -40,7 +40,7 @@ export default function FinanceSettingsModal({ show, onClose, rates, budgets, on
     if (from === 'BS_BCV' && to === 'EUR') return (val / eur_bscv).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     let result = 0;
-    if (to === 'USD') result = usdValue;
+    if (to === 'USD' || to === 'USDT') result = usdValue;
     else if (to === 'EUR') result = usdValue * (usd_bscv / eur_bscv);
     else if (to === 'BS_P') result = usdValue * usd_bs;
     else if (to === 'BS_BCV') result = usdValue * usd_bscv;
@@ -145,18 +145,21 @@ export default function FinanceSettingsModal({ show, onClose, rates, budgets, on
             <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 800 }}>Presupuestos ($ USD)</h3>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem' }}>
-            {categories.map(cat => (
-              <div key={cat} className="form-group" style={{ minWidth: 0 }}>
-                <label style={{ fontSize: '0.8rem', opacity: 0.7 }}>{cat}</label>
-                <input 
-                  type="number" 
-                  value={localBudgets[cat] || ''} 
-                  onChange={e => setLocalBudgets({...localBudgets, [cat]: e.target.value})} 
-                  placeholder="Sin límite"
-                  style={{ width: '100%', boxSizing: 'border-box' }}
-                />
-              </div>
-            ))}
+            {categories.map(catObj => {
+              const cat = catObj.id;
+              return (
+                <div key={cat} className="form-group" style={{ minWidth: 0 }}>
+                  <label style={{ fontSize: '0.8rem', opacity: 0.7 }}>{catObj.emoji || ''} {cat}</label>
+                  <input 
+                    type="number" 
+                    value={localBudgets[cat] || ''} 
+                    onChange={e => setLocalBudgets({...localBudgets, [cat]: e.target.value})} 
+                    placeholder="Sin límite"
+                    style={{ width: '100%', boxSizing: 'border-box' }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -202,4 +205,5 @@ FinanceSettingsModal.propTypes = {
   rates: PropTypes.object.isRequired,
   budgets: PropTypes.object.isRequired,
   onSave: PropTypes.func.isRequired,
+  categories: PropTypes.array
 };

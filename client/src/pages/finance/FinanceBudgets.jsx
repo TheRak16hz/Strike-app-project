@@ -62,7 +62,7 @@ function StatusBadge({ pct }) {
 
 StatusBadge.propTypes = { pct: PropTypes.number.isRequired };
 
-export default function FinanceBudgets({ budgets, categorySpending, onOpenSettings, onSaveBudgets, categories = [] }) {
+export default function FinanceBudgets({ budgets, categorySpending, onOpenSettings, onSaveBudgets, onAddExpense, categories = [] }) {
   // Inline editing state
   const [editing, setEditing] = useState(false);
   const [localBudgets, setLocalBudgets] = useState({ ...budgets });
@@ -120,9 +120,28 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {!editing ? (
             <>
+              <button
+                id="budgets-add-expense-btn"
+                onClick={onAddExpense}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
+              >
+                💸 Registrar Gasto
+              </button>
               <button
                 id="budgets-edit-btn"
                 onClick={() => setEditing(true)}
@@ -376,5 +395,6 @@ FinanceBudgets.propTypes = {
   categorySpending: PropTypes.object.isRequired,
   onOpenSettings: PropTypes.func.isRequired,
   onSaveBudgets: PropTypes.func.isRequired,
+  onAddExpense: PropTypes.func.isRequired,
   categories: PropTypes.array
 };

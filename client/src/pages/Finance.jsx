@@ -5,6 +5,7 @@ import { financeService } from '../services/financeService';
 // Tab components
 import FinanceOverview from './finance/FinanceOverview';
 import FinanceBudgets from './finance/FinanceBudgets';
+import FinanceGoals from './finance/FinanceGoals';
 import FinanceRates from './finance/FinanceRates';
 
 // Header
@@ -20,6 +21,7 @@ import MonthlyReportModal from '../components/finance/modals/MonthlyReportModal'
 const TABS = [
   { key: 'overview', label: '💰 Finanzas', title: 'Dashboard financiero' },
   { key: 'budgets', label: '📊 Presupuestos', title: 'Presupuestos mensuales por categoría' },
+  { key: 'goals', label: '🎯 Metas', title: 'Metas de ahorro y reserva' },
   { key: 'rates', label: '💱 Tasa', title: 'Tasas de cambio y calculadora' },
 ];
 
@@ -65,16 +67,38 @@ export default function Finance() {
     date: new Date().toISOString().split('T')[0], goal_id: '',
   });
 
+  const [forcedTransType, setForcedTransType] = useState(null);
+  const [forcedTransGoalId, setForcedTransGoalId] = useState(null);
+
   useEffect(() => {
     fetchDataInitial();
+  }, []);
+
+  useEffect(() => {
     const handleFinanceEvent = () => {
       setEditingItem(null);
       resetTransForm();
+      if (activeTab === 'budgets') {
+        setForcedTransType('expense');
+      } else if (activeTab === 'goals') {
+        setForcedTransType('saving');
+      } else {
+        setForcedTransType(null);
+      }
+      setForcedTransGoalId(null);
       setShowTransForm(true);
     };
     window.addEventListener('nav-action-finance', handleFinanceEvent);
     return () => window.removeEventListener('nav-action-finance', handleFinanceEvent);
-  }, []);
+  }, [activeTab]);
+
+  const handleAddBudgetExpense = () => {
+    setEditingItem(null);
+    resetTransForm();
+    setForcedTransType('expense');
+    setForcedTransGoalId(null);
+    setShowTransForm(true);
+  };
 
   const fetchDataInitial = async () => {
     try {
@@ -420,7 +444,19 @@ export default function Finance() {
           categorySpending={totals.categorySpending}
           onOpenSettings={() => setShowSettingsModal(true)}
           onSaveBudgets={handleSaveBudgets}
-          categories={metadata.finance_categories}
+          onAddExpense={handleAddBudgetExpense}
+          categories={metadata.finance_categories.filter(c => c.type === 'expense' || c.type === 'both')}
+        />
+      )}
+
+      {activeTab === 'goals' && (
+        <FinanceGoals
+          goals={totals.goalsForecast}
+          transactions={data.transactions}
+          onNewGoal={() => { setEditingItem(null); resetGoalForm(); setShowGoalForm(true); }}
+          onAdjustGoal={(goal) => { setSelectedGoal(goal); setAdjustType('add'); setAdjustData({ amount: '', description: '', currency: 'USD' }); setShowAdjustModal(true); }}
+          onEditGoal={startEditGoal}
+          onDeleteGoal={handleDeleteGoal}
         />
       )}
 
@@ -443,6 +479,9 @@ export default function Finance() {
         setNewTrans={setNewTrans}
         goals={data.goals}
         categories={metadata.finance_categories}
+        currencies={metadata.currencies}
+        forcedType={forcedTransType}
+        forcedGoalId={forcedTransGoalId}
       />
 
       <GoalFormModal
@@ -474,6 +513,7 @@ export default function Finance() {
         budgets={budgets}
         setBudgets={setBudgets}
         onSave={handleUpdateSettings}
+        categories={metadata.finance_categories.filter(c => c.type === 'expense' || c.type === 'both')}
       />
 
       <MonthlyReportModal
