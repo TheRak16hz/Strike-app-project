@@ -8,19 +8,21 @@ exports.getDailyData = async (req, res) => {
     const userId = req.user.id;
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Caracas' });
 
-    const [foodLogs, waterLogs, caffeineLogs, settings] = await Promise.all([
+    const [foodLogs, waterLogs, caffeineLogs, sugarLogs, settings] = await Promise.all([
       db.query('SELECT * FROM food_logs WHERE user_id = $1 AND log_date = $2 ORDER BY created_at DESC', [userId, today]),
       db.query('SELECT * FROM water_logs WHERE user_id = $1 AND log_date = $2 ORDER BY created_at DESC', [userId, today]),
       db.query('SELECT * FROM caffeine_logs WHERE user_id = $1 AND log_date = $2 ORDER BY created_at DESC', [userId, today]),
+      db.query('SELECT * FROM sugar_logs WHERE user_id = $1 AND log_date = $2 ORDER BY created_at DESC', [userId, today]),
       db.query('SELECT * FROM nutrition_settings WHERE user_id = $1', [userId])
     ]);
 
-    const defaultSettings = { calorie_goal: 2000, calorie_mode: 'maintain', water_goal_ml: 1920, water_unit: 'ml', water_reminder_interval: 60, caffeine_limit_mg: 400 };
+    const defaultSettings = { calorie_goal: 2000, calorie_mode: 'maintain', water_goal_ml: 1920, water_unit: 'ml', water_reminder_interval: 60, caffeine_limit_mg: 400, sugar_limit_g: 50 };
 
     res.json({
       food_logs: foodLogs.rows,
       water_logs: waterLogs.rows,
       caffeine_logs: caffeineLogs.rows,
+      sugar_logs: sugarLogs.rows,
       settings: settings.rows[0] || { user_id: userId, ...defaultSettings },
       date: today
     });
@@ -60,6 +62,30 @@ exports.getLibrary = async (req, res) => {
 
 // ========================
 // POST /api/nutrition/library
+// ========================
+// PUT /api/nutrition/library/:id
+// ========================
+exports.editFood = async (req, res) => {
+  try {
+    const { name, category, meal_type, calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, emoji } = req.body;
+    
+    const check = await db.query('SELECT * FROM food_library WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
+    if (check.rows.length === 0) {
+      return res.status(403).json({ error: 'No tienes permiso para editar este alimento o no existe.' });
+    }
+
+    const result = await db.query(
+      `UPDATE food_library SET name = $1, category = $2, meal_type = $3, calories_per_100g = $4, protein_per_100g = $5, carbs_per_100g = $6, fat_per_100g = $7, emoji = $8
+       WHERE id = $9 AND user_id = $10 RETURNING *`,
+      [name, category || 'Otros', meal_type || 'any', calories_per_100g, protein_per_100g || 0, carbs_per_100g || 0, fat_per_100g || 0, emoji || '🍽️', req.params.id, req.user.id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error editFood:', err);
+    res.status(500).json({ error: 'Error al editar alimento' });
+  }
+};
+
 // ========================
 exports.createFood = async (req, res) => {
   try {
@@ -187,15 +213,47 @@ exports.deleteCaffeine = async (req, res) => {
 };
 
 // ========================
+// POST /api/nutrition/sugar
+// ========================
+exports.logSugar = async (req, res) => {
+  try {
+    const { amount_g, source, log_date } = req.body;
+    const date = log_date || new Date().toLocaleDateString('en-CA', { timeZone: 'America/Caracas' });
+
+    const result = await db.query(
+      'INSERT INTO sugar_logs (user_id, amount_g, source, log_date) VALUES ($1, $2, $3, $4) RETURNING *',
+      [req.user.id, amount_g, source || 'azúcar', date]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error logSugar:', err);
+    res.status(500).json({ error: 'Error al registrar azúcar' });
+  }
+};
+
+// ========================
+// DELETE /api/nutrition/sugar/:id
+// ========================
+exports.deleteSugar = async (req, res) => {
+  try {
+    await db.query('DELETE FROM sugar_logs WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleteSugar:', err);
+    res.status(500).json({ error: 'Error al eliminar registro de azúcar' });
+  }
+};
+
+// ========================
 // POST /api/nutrition/settings
 // ========================
 exports.saveSettings = async (req, res) => {
   try {
-    const { calorie_goal, calorie_mode, water_goal_ml, water_unit, water_reminder_interval, caffeine_limit_mg } = req.body;
+    const { calorie_goal, calorie_mode, water_goal_ml, water_unit, water_reminder_interval, caffeine_limit_mg, sugar_limit_g } = req.body;
 
     const result = await db.query(
-      `INSERT INTO nutrition_settings (user_id, calorie_goal, calorie_mode, water_goal_ml, water_unit, water_reminder_interval, caffeine_limit_mg, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+      `INSERT INTO nutrition_settings (user_id, calorie_goal, calorie_mode, water_goal_ml, water_unit, water_reminder_interval, caffeine_limit_mg, sugar_limit_g, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
        ON CONFLICT (user_id) DO UPDATE SET
          calorie_goal = EXCLUDED.calorie_goal,
          calorie_mode = EXCLUDED.calorie_mode,
@@ -203,9 +261,10 @@ exports.saveSettings = async (req, res) => {
          water_unit = EXCLUDED.water_unit,
          water_reminder_interval = EXCLUDED.water_reminder_interval,
          caffeine_limit_mg = EXCLUDED.caffeine_limit_mg,
+         sugar_limit_g = EXCLUDED.sugar_limit_g,
          updated_at = NOW()
        RETURNING *`,
-      [req.user.id, calorie_goal || 2000, calorie_mode || 'maintain', water_goal_ml || 1920, water_unit || 'ml', water_reminder_interval || 60, caffeine_limit_mg || 400]
+      [req.user.id, calorie_goal || 2000, calorie_mode || 'maintain', water_goal_ml || 1920, water_unit || 'ml', water_reminder_interval || 60, caffeine_limit_mg || 400, sugar_limit_g || 50]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -307,6 +366,44 @@ exports.getBmi = async (req, res) => {
   }
 };
 
+// ========================
+// GET /api/nutrition/history
+// ========================
+exports.getHistory = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const days = parseInt(req.query.days) || 14;
+
+    const result = await db.query(`
+      WITH date_series AS (
+        SELECT generate_series(
+          CURRENT_DATE - INTERVAL '1 day' * $2, 
+          CURRENT_DATE, 
+          '1 day'::interval
+        )::date AS log_date
+      )
+      SELECT 
+        d.log_date,
+        COALESCE(SUM(f.calories), 0) AS total_calories,
+        COALESCE(SUM(f.protein), 0) AS total_protein,
+        COALESCE(SUM(f.carbs), 0) AS total_carbs,
+        COALESCE(SUM(f.fat), 0) AS total_fat,
+        (SELECT COALESCE(SUM(amount_ml), 0) FROM water_logs WHERE user_id = $1 AND log_date = d.log_date) AS total_water_ml,
+        (SELECT COALESCE(SUM(amount_mg), 0) FROM caffeine_logs WHERE user_id = $1 AND log_date = d.log_date) AS total_caffeine_mg,
+        (SELECT COALESCE(SUM(amount_g), 0) FROM sugar_logs WHERE user_id = $1 AND log_date = d.log_date) AS total_sugar_g
+      FROM date_series d
+      LEFT JOIN food_logs f ON f.log_date = d.log_date AND f.user_id = $1
+      GROUP BY d.log_date
+      ORDER BY d.log_date DESC
+    `, [userId, days]);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error getHistory:', err);
+    res.status(500).json({ error: 'Error al obtener el historial' });
+  }
+};
+
 // --- Hard Reset ---
 exports.deleteAllData = async (req, res) => {
     try {
@@ -315,6 +412,7 @@ exports.deleteAllData = async (req, res) => {
         await db.query('DELETE FROM food_logs WHERE user_id = $1', [userId]);
         await db.query('DELETE FROM water_logs WHERE user_id = $1', [userId]);
         await db.query('DELETE FROM caffeine_logs WHERE user_id = $1', [userId]);
+        await db.query('DELETE FROM sugar_logs WHERE user_id = $1', [userId]);
         await db.query('DELETE FROM nutrition_settings WHERE user_id = $1', [userId]);
         res.json({ message: 'Todos los datos de nutrición han sido eliminados.' });
     } catch (err) {

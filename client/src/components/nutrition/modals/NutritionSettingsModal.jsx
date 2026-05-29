@@ -9,7 +9,8 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
     calorie_goal: 2000,
     calorie_mode: 'maintain',
     water_goal_ml: 1920,
-    caffeine_limit_mg: 400
+    caffeine_limit_mg: 400,
+    sugar_limit_g: 50
   });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
         calorie_goal: settings.calorie_goal || 2000,
         calorie_mode: settings.calorie_mode || 'maintain',
         water_goal_ml: settings.water_goal_ml || 1920,
-        caffeine_limit_mg: settings.caffeine_limit_mg || 400
+        caffeine_limit_mg: settings.caffeine_limit_mg || 400,
+        sugar_limit_g: settings.sugar_limit_g || 50
       });
     }
   }, [show, settings]);
@@ -86,6 +88,19 @@ export default function NutritionSettingsModal({ show, onClose, settings, onSave
               required 
             />
             <span style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.3rem' }}>Recomendación FDA: 400mg</span>
+          </div>
+
+          <div className="form-group">
+            <label>Límite de Azúcar (g/día)</label>
+            <input 
+              type="number" 
+              value={localSettings.sugar_limit_g} 
+              onChange={e => setLocalSettings({...localSettings, sugar_limit_g: Number(e.target.value)})} 
+              min="0" 
+              step="5"
+              required 
+            />
+            <span style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.3rem' }}>Recomendación OMS: 50g (idealmente 25g)</span>
           </div>
 
         </div>

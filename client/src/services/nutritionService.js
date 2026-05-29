@@ -92,6 +92,32 @@ export const nutritionService = {
     return res.json();
   },
 
+  // Sugar
+  logSugar: async (data) => {
+    const res = await fetch(`${API}/api/nutrition/sugar`, { method: 'POST', headers: getHeaders(), body: JSON.stringify(data) });
+    if (!res.ok) throw new Error('Error al registrar azúcar');
+    return res.json();
+  },
+  deleteSugar: async (id) => {
+    const res = await fetch(`${API}/api/nutrition/sugar/${id}`, { method: 'DELETE', headers: getHeaders() });
+    if (!res.ok) throw new Error('Error al eliminar registro de azúcar');
+    return res.json();
+  },
+
+  // Edit food in library
+  editFood: async (id, data) => {
+    const res = await fetch(`${API}/api/nutrition/library/${id}`, { method: 'PUT', headers: getHeaders(), body: JSON.stringify(data) });
+    if (!res.ok) throw new Error('Error al editar alimento');
+    return res.json();
+  },
+
+  // History
+  getHistory: async (days = 14) => {
+    const res = await fetch(`${API}/api/nutrition/history?days=${days}`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Error al obtener historial');
+    return res.json();
+  },
+
   deleteAllData: async () => {
     const res = await fetch(`${API}/api/nutrition/all`, { method: 'DELETE', headers: getHeaders() });
     if (!res.ok) throw new Error('Error al eliminar datos');
