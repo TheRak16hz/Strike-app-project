@@ -69,9 +69,13 @@ exports.logSleep = async (req, res) => {
     if (currentTag === 'dormir') {
         const h = Number(hours);
         if (h < 4) calcQuality = 1;
+        else if (h < 4.5) calcQuality = 1.5;
         else if (h < 5) calcQuality = 2;
+        else if (h < 5.5) calcQuality = 2.5;
         else if (h < 6.5) calcQuality = 3;
-        else if (h <= 8) calcQuality = 4;
+        else if (h < 7) calcQuality = 3.5;
+        else if (h < 8) calcQuality = 4;
+        else if (h < 9) calcQuality = 4.5;
         else calcQuality = 5;
     } else {
         calcQuality = quality || 3;
@@ -101,9 +105,13 @@ exports.updateSleepLog = async (req, res) => {
     if (currentTag === 'dormir') {
         const h = Number(hours);
         if (h < 4) calcQuality = 1;
+        else if (h < 4.5) calcQuality = 1.5;
         else if (h < 5) calcQuality = 2;
+        else if (h < 5.5) calcQuality = 2.5;
         else if (h < 6.5) calcQuality = 3;
-        else if (h <= 8) calcQuality = 4;
+        else if (h < 7) calcQuality = 3.5;
+        else if (h < 8) calcQuality = 4;
+        else if (h < 9) calcQuality = 4.5;
         else calcQuality = 5;
     } else {
         calcQuality = quality || 3;

@@ -70,7 +70,18 @@ export default function SleepStats({ stats, settings, logs, onDelete }) {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem' }}>
                       <div style={{ fontWeight: 800, color: isGood ? '#10b981' : (Number(log.hours) < 6 ? '#ef4444' : '#f59e0b') }}>{log.hours}h</div>
                       <div style={{ display: 'flex', gap: '2px' }}>
-                        {[...Array(log.quality || 3)].map((_, j) => <Star key={j} size={10} color="#f59e0b" fill="#f59e0b" />)}
+                        {[1, 2, 3, 4, 5].map(star => {
+                          const q = Number(log.quality) || 3;
+                          const fillPercent = q >= star ? '100%' : (q === star - 0.5 ? '50%' : '0%');
+                          return (
+                            <div key={star} style={{ position: 'relative', display: 'inline-block', width: '12px', height: '12px' }}>
+                              <Star size={12} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0 }} />
+                              <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, overflow: 'hidden' }}>
+                                <Star size={12} color="#f59e0b" fill="#f59e0b" />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                     {onDelete && (
