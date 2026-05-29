@@ -120,7 +120,7 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="budgets-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {!editing ? (
             <>
               <button
@@ -372,14 +372,36 @@ export default function FinanceBudgets({ budgets, categorySpending, onOpenSettin
         .budgets-header-title {
           font-size: 1.25rem;
         }
+         .budgets-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
         @media (max-width: 480px) {
           .budgets-header-card {
             padding: 1rem !important;
             flex-direction: column;
             align-items: stretch !important;
+            gap: 0.75rem !important;
           }
           .budgets-header-title {
             font-size: 1.1rem;
+          }
+          .budgets-header-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+          }
+          .budgets-header-actions button {
+            width: 100% !important;
+            justify-content: center !important;
+            font-size: 0.78rem !important;
+            padding: 0.6rem 0.5rem !important;
+          }
+          .budgets-header-actions button:last-child {
+            grid-column: span 2;
           }
           .budgets-category-grid {
             grid-template-columns: 1fr;

@@ -12,18 +12,18 @@ export default function FinanceHeader({ onNewGoal, onOpenSettings, onResetTransa
       </div>
 
       
-      <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+      <div className="finance-header-actions" style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <button onClick={onResetTransactions} style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.05)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.1)', cursor: 'pointer' }} title="Reiniciar Movimientos">
           <RefreshCw size={14} /> 
         </button>
         <button onClick={onResetGoals} style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.05)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.1)', cursor: 'pointer' }} title="Eliminar Metas">
           <Target size={14} />
         </button>
-        <button className="theme-toggle" onClick={onOpenSettings} title="Ajustes">
+        <button className="theme-toggle" onClick={onOpenSettings} style={{ cursor: 'pointer' }} title="Ajustes">
           <Settings size={20} />
         </button>
-        <button className="btn-primary" onClick={onNewGoal}>
-          <Target size={18} /> Nueva Meta
+        <button className="btn-primary" onClick={onNewGoal} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 0.9rem', fontSize: '0.82rem' }}>
+          <Target size={16} /> <span className="btn-text">Nueva Meta</span>
         </button>
       </div>
     </div>

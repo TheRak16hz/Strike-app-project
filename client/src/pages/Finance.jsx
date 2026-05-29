@@ -417,6 +417,8 @@ export default function Finance() {
                 : 'transparent',
               color: activeTab === tab.key ? 'white' : 'var(--text-secondary)',
               boxShadow: activeTab === tab.key ? '0 2px 12px rgba(var(--primary-rgb),0.35)' : 'none',
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
             }}
           >
             {tab.label}

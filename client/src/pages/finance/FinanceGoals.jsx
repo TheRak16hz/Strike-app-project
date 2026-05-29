@@ -25,7 +25,7 @@ export default function FinanceGoals({
       
       {/* Header Cards & KPI */}
       <div 
-        className="glass-panel"
+        className="glass-panel goals-header-card"
         style={{
           padding: '1.5rem 2rem',
           display: 'flex',
@@ -61,7 +61,7 @@ export default function FinanceGoals({
 
         <button
           onClick={onNewGoal}
-          className="btn-primary"
+          className="btn-primary goals-add-btn"
           style={{
             padding: '0.6rem 1.2rem',
             fontSize: '0.82rem',
@@ -119,7 +119,7 @@ export default function FinanceGoals({
                   </div>
 
                   {/* Actions */}
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <div className="goal-card-actions" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <button 
                       onClick={() => onAdjustGoal(goal)} 
                       className="btn-primary" 
@@ -253,6 +253,34 @@ export default function FinanceGoals({
           })
         )}
       </div>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .goals-header-card {
+            padding: 1rem !important;
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 0.75rem !important;
+          }
+          .goals-add-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .goal-card-actions {
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: 1fr 36px 36px !important;
+            gap: 0.4rem !important;
+            margin-top: 0.5rem !important;
+          }
+          .goal-card-actions button {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 0.55rem 0.2rem !important;
+            margin: 0 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
