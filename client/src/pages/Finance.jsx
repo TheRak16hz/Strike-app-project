@@ -532,16 +532,27 @@ export default function Finance() {
           max-width: 1400px;
           margin: 0 auto;
           box-sizing: border-box;
-          overflow-x: hidden;
         }
         @media (max-width: 600px) {
           .finance-page {
             padding: 0.75rem;
             padding-bottom: 5rem;
-            overflow-x: hidden;
           }
           .finance-tabs-nav {
-            padding-bottom: 0.5rem !important; /* give room for scrollbar */
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.5rem !important;
+            padding: 0.5rem !important;
+          }
+          .finance-tabs-nav button {
+            width: 100% !important;
+            padding: 0.6rem 0.2rem !important;
+            font-size: 0.8rem !important;
+            justify-content: center !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.3rem !important;
           }
         }
       `}</style>

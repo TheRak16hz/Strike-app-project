@@ -16,9 +16,10 @@ export default function FinanceOverview({
 }) {
   return (
     <div className="animate-fade-in">
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+      <div className="finance-overview-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <button
           id="finance-report-btn"
+          className="finance-report-btn"
           onClick={onShowReport}
           style={{
             padding: '0.6rem 1.2rem',
@@ -60,6 +61,21 @@ export default function FinanceOverview({
           onDelete={onDeleteGoal}
         />
       </div>
+      
+      <style>{`
+        @media (max-width: 480px) {
+          .finance-overview-actions {
+            justify-content: center !important;
+          }
+          .finance-report-btn {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
