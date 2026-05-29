@@ -116,18 +116,22 @@ export default function TransactionFormModal({
            <div className="form-group" style={{ minWidth: 0 }}>
              <label>Divisa</label>
              <select value={newTrans.currency} onChange={e => setNewTrans({...newTrans, currency: e.target.value})} style={{ width: '100%', boxSizing: 'border-box' }}>
-               {currencies && currencies.length > 0 ? (
-                 currencies.map(c => <option key={c.value} value={c.value}>{c.emoji || ''} {c.label || c.name}</option>)
-               ) : (
-                 <>
-                   <option value="USD">🇺🇸 USD</option>
-                   <option value="USDT">🟢 USDT</option>
-                   <option value="BS_P">🇻🇪 Bs (Paralelo)</option>
-                   <option value="BS_BCV">🏛️ Bs (BCV)</option>
-                   <option value="COP">🇨🇴 COP</option>
-                   <option value="EUR">🇪🇺 EUR</option>
-                 </>
-               )}
+               {(() => {
+                 const ALLOWED = ['USD', 'USDT', 'BS_P', 'COP'];
+                 const filtered = currencies && currencies.length > 0
+                   ? currencies.filter(c => ALLOWED.includes(c.value))
+                   : [];
+                 return filtered.length > 0 ? (
+                   filtered.map(c => <option key={c.value} value={c.value}>{c.emoji || ''} {c.label || c.name}</option>)
+                 ) : (
+                   <>
+                     <option value="USD">💵 USD</option>
+                     <option value="USDT">🟢 USDT</option>
+                     <option value="BS_P">🇻🇪 Bs Paralelo</option>
+                     <option value="COP">🇨🇴 COP</option>
+                   </>
+                 );
+               })()}
              </select>
            </div>
         </div>

@@ -334,7 +334,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                   flexShrink: 0,
                 }}
               >
-                {currencies.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                {currencies.filter(c => ['USD','BS_P','BS_BCV','EUR','COP'].includes(c.value)).map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
             </div>
           </div>
@@ -409,7 +409,7 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                   flexShrink: 0,
                 }}
               >
-                {currencies.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                {currencies.filter(c => ['USD','BS_P','BS_BCV','EUR','COP'].includes(c.value)).map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
             </div>
           </div>
