@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Moon, Sun, Star, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 function getYesterdayDate() {
   const d = new Date();
   d.setDate(d.getDate() - 1);
-  return d.toLocaleDateString('en-CA'); // YYYY-MM-DD
+  return d.toLocaleDateString('en-CA');
 }
 
 export default function SleepLogForm({ onLogSleep }) {
@@ -18,20 +18,47 @@ export default function SleepLogForm({ onLogSleep }) {
   const [notes, setNotes] = useState('');
   const [tag, setTag] = useState('dormir');
 
-  useEffect(() => {
-    if (bedtime && wakeupTime) {
-      const [bedHour, bedMin] = bedtime.split(':').map(Number);
-      const [wakeHour, wakeMin] = wakeupTime.split(':').map(Number);
+  const calculateHours = (bed, wake) => {
+    const [bedHour, bedMin] = bed.split(':').map(Number);
+    const [wakeHour, wakeMin] = wake.split(':').map(Number);
+    let diffMin = (wakeHour * 60 + wakeMin) - (bedHour * 60 + bedMin);
+    if (diffMin < 0) diffMin += 24 * 60;
+    return Number((diffMin / 60).toFixed(2));
+  };
 
-      let diffMin = (wakeHour * 60 + wakeMin) - (bedHour * 60 + bedMin);
-      if (diffMin < 0) {
-        diffMin += 24 * 60;
-      }
-      
-      const calculatedHours = Number((diffMin / 60).toFixed(2));
-      setHours(calculatedHours);
+  const calculateWakeup = (bed, h) => {
+    const [bedHour, bedMin] = bed.split(':').map(Number);
+    const totalMinutes = bedHour * 60 + bedMin + Number(h) * 60;
+    const wakeHour = Math.floor(totalMinutes / 60) % 24;
+    const wakeMin = Math.round(totalMinutes % 60);
+    return `${String(wakeHour).padStart(2, '0')}:${String(wakeMin).padStart(2, '0')}`;
+  };
+
+  const handleBedtimeChange = (e) => {
+    const val = e.target.value;
+    setBedtime(val);
+    if (val && hours) {
+      setWakeupTime(calculateWakeup(val, hours));
+    } else if (val && wakeupTime) {
+      setHours(calculateHours(val, wakeupTime));
     }
-  }, [bedtime, wakeupTime]);
+  };
+
+  const handleWakeupChange = (e) => {
+    const val = e.target.value;
+    setWakeupTime(val);
+    if (val && bedtime) {
+      setHours(calculateHours(bedtime, val));
+    }
+  };
+
+  const handleHoursChange = (e) => {
+    const val = e.target.value;
+    setHours(val);
+    if (val && bedtime) {
+      setWakeupTime(calculateWakeup(bedtime, val));
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,7 +68,6 @@ export default function SleepLogForm({ onLogSleep }) {
     onLogSleep({ log_date: logDate, hours: Number(hours), bedtime, wakeup_time: wakeupTime, quality, notes, tag });
     toast.success('Sueño registrado');
     
-    // Reset but keep quality at 3
     setLogDate(getYesterdayDate());
     setHours('');
     setBedtime('');
@@ -76,33 +102,50 @@ export default function SleepLogForm({ onLogSleep }) {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem' }}>
           <div className="form-group" style={{ minWidth: 0 }}>
-            <label>Horas Totales</label>
-            <input type="number" step="0.1" min="0" max="24" value={hours} onChange={e => setHours(e.target.value)} placeholder="Ej. 7.5" required autoFocus style={{ width: '100%', boxSizing: 'border-box' }} />
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Moon size={14} opacity={0.7}/> Hora de dormir</label>
+            <input type="time" value={bedtime} onChange={handleBedtimeChange} style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
           <div className="form-group" style={{ minWidth: 0 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Moon size={14} opacity={0.7}/> Hora de dormir</label>
-            <input type="time" value={bedtime} onChange={e => setBedtime(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} />
+            <label>Horas Totales</label>
+            <input type="number" step="0.01" min="0" max="24" value={hours} onChange={handleHoursChange} placeholder="Ej. 7.50" required autoFocus style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
           <div className="form-group" style={{ minWidth: 0 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><Sun size={14} opacity={0.7}/> Hora de despertar</label>
-            <input type="time" value={wakeupTime} onChange={e => setWakeupTime(e.target.value)} style={{ width: '100%', boxSizing: 'border-box' }} />
+            <input type="time" value={wakeupTime} onChange={handleWakeupChange} style={{ width: '100%', boxSizing: 'border-box' }} />
           </div>
         </div>
 
         {tag !== 'dormir' && (
           <div className="form-group">
-            <label>Calidad (Estrellas)</label>
+            <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              Calidad (Estrellas)
+              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f59e0b' }}>{quality}</span>
+            </label>
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
-              {[1, 2, 3, 4, 5].map(star => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setQuality(star)}
-                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', transition: '0.2s', transform: quality >= star ? 'scale(1.1)' : 'scale(1)' }}
-                >
-                  <Star size={28} color={quality >= star ? '#f59e0b' : 'rgba(255,255,255,0.2)'} fill={quality >= star ? '#f59e0b' : 'none'} />
-                </button>
-              ))}
+              {[1, 2, 3, 4, 5].map(star => {
+                const fillPercent = quality >= star ? '100%' : (quality === star - 0.5 ? '50%' : '0%');
+                return (
+                  <div key={star} style={{ position: 'relative', display: 'inline-block', width: '28px', height: '28px' }}>
+                    {/* Empty Background Star */}
+                    <Star size={28} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none' }} />
+                    
+                    {/* Filled Star with clipPath/width trick */}
+                    <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, overflow: 'hidden', pointerEvents: 'none' }}>
+                      <Star size={28} color="#f59e0b" fill="#f59e0b" />
+                    </div>
+
+                    {/* Clickable areas for half and full */}
+                    <div
+                      onClick={() => setQuality(star - 0.5)}
+                      style={{ position: 'absolute', left: 0, top: 0, width: '50%', height: '100%', cursor: 'pointer', zIndex: 2 }}
+                    />
+                    <div
+                      onClick={() => setQuality(star)}
+                      style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', cursor: 'pointer', zIndex: 2 }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
