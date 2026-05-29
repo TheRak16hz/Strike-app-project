@@ -20,6 +20,7 @@ async function run() {
     const financeFixSql = fs.readFileSync(path.join(__dirname, '../db/update_v9_finance_fix.sql'), 'utf8');
     const goalsPositionSql = fs.readFileSync(path.join(__dirname, '../db/update_v10_finance_goals_position.sql'), 'utf8');
     const sleepQualitySql = fs.readFileSync(path.join(__dirname, '../db/update_v11_sleep_quality_decimal.sql'), 'utf8');
+    const dedupSql = fs.readFileSync(path.join(__dirname, '../db/update_v12_nutrition_dedup.sql'), 'utf8');
     
     console.log('Running nutrition migrations...');
     await pool.query(nutritionSql);
@@ -60,6 +61,10 @@ async function run() {
     console.log('Running sleep quality decimal (v11) migrations...');
     await pool.query(sleepQualitySql);
     console.log('Sleep quality decimal (v11) done.');
+
+    console.log('Running nutrition library deduplication (v12)...');
+    await pool.query(dedupSql);
+    console.log('Nutrition library deduplication (v12) done.');
 
     console.log('All migrations executed successfully.');
   } catch (err) {
