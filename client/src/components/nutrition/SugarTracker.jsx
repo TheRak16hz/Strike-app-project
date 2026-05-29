@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { Candy, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function SugarTracker({ logs, settings, onLogSugar, onDeleteSugar }) {
-  const currentG = logs.reduce((sum, log) => sum + Number(log.amount_g), 0);
+export default function SugarTracker({ logs = [], settings = {}, onLogSugar, onDeleteSugar }) {
+  const currentG = (logs || []).reduce((sum, log) => sum + Number(log.amount_g), 0);
   const limitG = settings.sugar_limit_g || 50;
   const progress = Math.min((currentG / limitG) * 100, 100);
 

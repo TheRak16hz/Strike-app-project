@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { Droplet, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function WaterTracker({ logs, settings, onLogWater, onDeleteWater }) {
-  const currentMl = logs.reduce((sum, log) => sum + Number(log.amount_ml), 0);
+export default function WaterTracker({ logs = [], settings = {}, onLogWater, onDeleteWater }) {
+  const currentMl = (logs || []).reduce((sum, log) => sum + Number(log.amount_ml), 0);
   const goalMl = settings.water_goal_ml || 1920;
   const progress = Math.min((currentMl / goalMl) * 100, 100);
 

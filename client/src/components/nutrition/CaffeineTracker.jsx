@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { Coffee, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export default function CaffeineTracker({ logs, settings, onLogCaffeine, onDeleteCaffeine }) {
-  const currentMg = logs.reduce((sum, log) => sum + Number(log.amount_mg), 0);
+export default function CaffeineTracker({ logs = [], settings = {}, onLogCaffeine, onDeleteCaffeine }) {
+  const currentMg = (logs || []).reduce((sum, log) => sum + Number(log.amount_mg), 0);
   const limitMg = settings.caffeine_limit_mg || 400;
   const progress = Math.min((currentMg / limitMg) * 100, 100);
 
