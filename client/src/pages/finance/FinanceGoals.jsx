@@ -8,7 +8,8 @@ export default function FinanceGoals({
   onNewGoal,
   onAdjustGoal,
   onEditGoal,
-  onDeleteGoal
+  onDeleteGoal,
+  onMoveGoal
 }) {
   const [expandedGoalId, setExpandedGoalId] = useState(null);
 
@@ -120,6 +121,24 @@ export default function FinanceGoals({
 
                   {/* Actions */}
                   <div className="goal-card-actions" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    {onMoveGoal && (
+                      <>
+                        <button 
+                          onClick={() => onMoveGoal(goal.id, 'up')} 
+                          style={{ padding: '0.45rem', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#fff', cursor: 'pointer' }} 
+                          title="Mover arriba"
+                        >
+                          <ChevronUp size={13} />
+                        </button>
+                        <button 
+                          onClick={() => onMoveGoal(goal.id, 'down')} 
+                          style={{ padding: '0.45rem', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#fff', cursor: 'pointer' }} 
+                          title="Mover abajo"
+                        >
+                          <ChevronDown size={13} />
+                        </button>
+                      </>
+                    )}
                     <button 
                       onClick={() => onAdjustGoal(goal)} 
                       className="btn-primary" 
@@ -269,7 +288,7 @@ export default function FinanceGoals({
           .goal-card-actions {
             width: 100% !important;
             display: grid !important;
-            grid-template-columns: 1fr 36px 36px !important;
+            grid-template-columns: 1fr repeat(4, 36px) !important;
             gap: 0.4rem !important;
             margin-top: 0.5rem !important;
           }
@@ -291,5 +310,6 @@ FinanceGoals.propTypes = {
   onNewGoal: PropTypes.func.isRequired,
   onAdjustGoal: PropTypes.func.isRequired,
   onEditGoal: PropTypes.func.isRequired,
-  onDeleteGoal: PropTypes.func.isRequired
+  onDeleteGoal: PropTypes.func.isRequired,
+  onMoveGoal: PropTypes.func
 };

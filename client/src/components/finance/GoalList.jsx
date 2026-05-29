@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { ArrowLeftRight, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, Edit2, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 
-export default function GoalList({ goals, onAdjust, onEdit, onDelete }) {
+export default function GoalList({ goals, onAdjust, onEdit, onDelete, onMove }) {
   return (
     <section className="glass-panel area-goals" style={{ padding: '1.2rem', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
       <h3 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>Metas Activas</h3>
@@ -24,6 +24,12 @@ export default function GoalList({ goals, onAdjust, onEdit, onDelete }) {
                      </h4>
                   </div>
                   <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', marginLeft: '0.5rem' }}>
+                    {onMove && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginRight: '2px' }}>
+                        <button onClick={() => onMove(goal.id, 'up')} style={{ padding: '1px 3px', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-secondary)', cursor: 'pointer' }} title="Mover arriba"><ChevronUp size={11} /></button>
+                        <button onClick={() => onMove(goal.id, 'down')} style={{ padding: '1px 3px', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-secondary)', cursor: 'pointer' }} title="Mover abajo"><ChevronDown size={11} /></button>
+                      </div>
+                    )}
                     <button onClick={() => onAdjust(goal)} style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#fff', cursor: 'pointer' }} title="Ajustar"><ArrowLeftRight size={13} /></button>
                     <button onClick={() => onEdit(goal)} style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: '#fff', cursor: 'pointer' }} title="Editar"><Edit2 size={13} /></button>
                     <button onClick={() => onDelete(goal.id)} style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.1)', borderRadius: '8px', color: '#ef4444', cursor: 'pointer' }} title="Eliminar"><Trash2 size={13} /></button>
@@ -72,4 +78,5 @@ GoalList.propTypes = {
   onAdjust: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onMove: PropTypes.func,
 };

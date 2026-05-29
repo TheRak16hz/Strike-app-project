@@ -49,6 +49,17 @@ export const financeService = {
     return data;
   },
 
+  reorderGoals: async (order) => {
+    const res = await fetch(`${API_URL}/goals/reorder/all`, {
+      method: 'PUT',
+      headers: getAuthHeader(),
+      body: JSON.stringify({ order })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error');
+    return data;
+  },
+
   deleteGoal: async (id) => {
     const res = await fetch(`${API_URL}/goals/${id}`, {
       method: 'DELETE',

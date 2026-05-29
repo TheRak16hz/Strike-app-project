@@ -341,6 +341,31 @@ export default function Finance() {
   const startEditGoal = (goal) => { setEditingItem({ type: 'goal', data: goal }); setNewGoal({ ...goal }); setShowGoalForm(true); };
   const startEditTrans = (tx) => { setEditingItem({ type: 'transaction', data: tx }); setNewTrans({ ...tx, date: tx.date.split('T')[0], goal_id: tx.goal_id || '' }); setShowTransForm(true); };
 
+  const handleMoveGoal = async (id, direction) => {
+    const goals = data.goals;
+    const idx = goals.findIndex(g => g.id === id);
+    if (idx < 0) return;
+
+    const newGoals = [...goals];
+    if (direction === 'up' && idx > 0) {
+      [newGoals[idx - 1], newGoals[idx]] = [newGoals[idx], newGoals[idx - 1]];
+    } else if (direction === 'down' && idx < goals.length - 1) {
+      [newGoals[idx + 1], newGoals[idx]] = [newGoals[idx], newGoals[idx + 1]];
+    } else {
+      return;
+    }
+
+    setData(prev => ({ ...prev, goals: newGoals }));
+    const orderPayload = newGoals.map((g, i) => ({ id: g.id, position: i }));
+    try {
+      await financeService.reorderGoals(orderPayload);
+    } catch (err) {
+      console.error(err);
+      toast.error("Error al guardar orden de las metas");
+      fetchData();
+    }
+  };
+
   const handleDeleteGoal = async (id) => {
     if (window.confirm('¿Eliminar meta?')) {
       try { await financeService.deleteGoal(id); toast.success('Meta eliminada'); fetchData(); }
@@ -437,6 +462,7 @@ export default function Finance() {
           onEditGoal={startEditGoal}
           onDeleteGoal={handleDeleteGoal}
           onShowReport={() => setShowReportModal(true)}
+          onMoveGoal={handleMoveGoal}
         />
       )}
 
@@ -459,6 +485,7 @@ export default function Finance() {
           onAdjustGoal={(goal) => { setSelectedGoal(goal); setAdjustType('add'); setAdjustData({ amount: '', description: '', currency: 'USD' }); setShowAdjustModal(true); }}
           onEditGoal={startEditGoal}
           onDeleteGoal={handleDeleteGoal}
+          onMoveGoal={handleMoveGoal}
         />
       )}
 

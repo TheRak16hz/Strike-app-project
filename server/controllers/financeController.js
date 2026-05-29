@@ -163,7 +163,7 @@ exports.fetchLiveRates = async (req, res) => {
 
 exports.getFinanceData = async (req, res) => {
   try {
-    const goalsResult = await db.query('SELECT * FROM savings_goals WHERE user_id = $1 ORDER BY created_at DESC', [req.user.id]);
+    const goalsResult = await db.query('SELECT * FROM savings_goals WHERE user_id = $1 ORDER BY position ASC, created_at DESC', [req.user.id]);
     const transactionsResult = await db.query('SELECT * FROM transactions WHERE user_id = $1 ORDER BY date DESC, created_at DESC LIMIT 200', [req.user.id]);
     const settingsResult = await db.query('SELECT settings FROM user_settings WHERE user_id = $1', [req.user.id]);
     
@@ -400,5 +400,23 @@ exports.deleteAllGoals = async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: 'Error al eliminar metas' });
+  }
+};
+
+exports.reorderGoals = async (req, res) => {
+  try {
+    const { order } = req.body;
+    if (!Array.isArray(order)) return res.status(400).json({ error: 'Invalid order format' });
+
+    for (const item of order) {
+      await db.query(
+        'UPDATE savings_goals SET position = $1 WHERE id = $2 AND user_id = $3',
+        [item.position, item.id, req.user.id]
+      );
+    }
+    res.json({ message: 'Order updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Error reordering goals' });
   }
 };

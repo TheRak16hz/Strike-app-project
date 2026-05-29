@@ -9,6 +9,7 @@ router.use(authMiddleware);
 router.get('/', financeController.getFinanceData);
 router.get('/metadata', financeController.getMetadata);
 router.post('/goals', financeController.createGoal);
+router.put('/goals/reorder/all', financeController.reorderGoals);
 router.put('/goals/:id', financeController.updateGoal);
 router.delete('/goals/all', financeController.deleteAllGoals);
 router.delete('/goals/:id', financeController.deleteGoal);

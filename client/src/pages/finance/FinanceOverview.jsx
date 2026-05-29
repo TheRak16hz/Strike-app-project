@@ -13,6 +13,7 @@ export default function FinanceOverview({
   onEditGoal,
   onDeleteGoal,
   onShowReport,
+  onMoveGoal,
 }) {
   return (
     <div className="animate-fade-in">
@@ -59,6 +60,7 @@ export default function FinanceOverview({
           onAdjust={onAdjustGoal}
           onEdit={onEditGoal}
           onDelete={onDeleteGoal}
+          onMove={onMoveGoal}
         />
       </div>
       
@@ -89,4 +91,5 @@ FinanceOverview.propTypes = {
   onEditGoal: PropTypes.func.isRequired,
   onDeleteGoal: PropTypes.func.isRequired,
   onShowReport: PropTypes.func.isRequired,
+  onMoveGoal: PropTypes.func,
 };
