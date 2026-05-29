@@ -36,10 +36,22 @@ exports.getDailyData = async (req, res) => {
 exports.getLibrary = async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT * FROM food_library WHERE user_id IS NULL OR user_id = $1 ORDER BY category, name',
+      `SELECT DISTINCT ON (name) * 
+       FROM food_library 
+       WHERE user_id IS NULL OR user_id = $1 
+       ORDER BY name, user_id DESC`,
       [req.user.id]
     );
-    res.json(result.rows);
+    
+    // Sort by category then name in memory
+    const sorted = result.rows.sort((a, b) => {
+      if (a.category === b.category) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.category.localeCompare(b.category);
+    });
+    
+    res.json(sorted);
   } catch (err) {
     console.error('Error getLibrary:', err);
     res.status(500).json({ error: 'Error al obtener librería' });
