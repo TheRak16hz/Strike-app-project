@@ -529,11 +529,14 @@ export default function Finance() {
           padding: 1.5rem;
           max-width: 1400px;
           margin: 0 auto;
+          box-sizing: border-box;
+          overflow-x: hidden;
         }
         @media (max-width: 600px) {
           .finance-page {
             padding: 0.75rem;
             padding-bottom: 5rem;
+            overflow-x: hidden;
           }
           .finance-tabs-nav {
             padding-bottom: 0.5rem !important; /* give room for scrollbar */

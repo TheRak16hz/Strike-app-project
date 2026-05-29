@@ -322,14 +322,16 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                 value={calc.from}
                 onChange={e => setCalc(prev => ({ ...prev, from: e.target.value }))}
                 style={{
-                  padding: '0.9rem 0.8rem',
+                  width: 'auto',
+                  padding: '0.9rem 0.5rem',
                   background: 'rgba(var(--primary-rgb),0.06)',
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
                   borderRadius: '12px',
                   color: 'var(--text-primary)',
-                  fontSize: '0.85rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
+                  flexShrink: 0,
                 }}
               >
                 {currencies.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -395,14 +397,16 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
                 value={calc.to}
                 onChange={e => setCalc(prev => ({ ...prev, to: e.target.value }))}
                 style={{
-                  padding: '0.9rem 0.8rem',
+                  width: 'auto',
+                  padding: '0.9rem 0.5rem',
                   background: 'rgba(var(--primary-rgb),0.06)',
                   border: '1px solid rgba(var(--primary-rgb),0.2)',
                   borderRadius: '12px',
                   color: 'var(--text-primary)',
-                  fontSize: '0.85rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
+                  flexShrink: 0,
                 }}
               >
                 {currencies.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -437,7 +441,10 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
           align-items: stretch;
         }
         .calc-select {
-          flex: 0 0 130px;
+          flex: 0 0 auto !important;
+          width: auto !important;
+          max-width: 110px !important;
+          min-width: 0 !important;
         }
         .calc-result-box {
           flex: 1 1 auto;
@@ -464,12 +471,14 @@ export default function FinanceRates({ rates, onSaveRates, rateConfigs = [], cur
             font-size: 1.15rem !important;
           }
           .calc-inputs-wrapper {
-            flex-direction: column;
-            gap: 0.5rem;
+            flex-direction: row;
+            gap: 0.4rem;
           }
           .calc-select {
-            flex: 1 1 auto;
-            width: 100%;
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 95px;
+            min-width: 70px;
           }
         }
         @media (max-width: 360px) {
