@@ -292,6 +292,16 @@ export default function Finance() {
   const handleCreateOrUpdateTrans = async (e) => {
     e.preventDefault();
     const cleanedTrans = { ...newTrans, amount: parseFloat(newTrans.amount) || 0 };
+    
+    // Add goal title to category
+    if (cleanedTrans.goal_id) {
+       const goal = data.goals.find(g => g.id == cleanedTrans.goal_id);
+       if (goal) {
+         if (cleanedTrans.type === 'saving') cleanedTrans.category = `Ahorro a: ${goal.title}`;
+         else if (cleanedTrans.type === 'goal_withdrawal') cleanedTrans.category = `Retiro de: ${goal.title}`;
+       }
+    }
+
     try {
       if (cleanedTrans.type === 'saving') {
         const amountUSD = convertToUSD(cleanedTrans.amount, cleanedTrans.currency);
@@ -322,11 +332,11 @@ export default function Finance() {
           toast.error(`Capital disponible insuficiente ($${totals.availableLiquidUSD.toFixed(2)} USD)`);
           return;
         }
-        await financeService.createTransaction({ type: 'saving', amount: adjustData.amount, currency: adjustData.currency, category: 'Ahorro Manual', description: adjustData.description || 'Ajuste', goal_id: selectedGoal.id, date: tzDate });
+        await financeService.createTransaction({ type: 'saving', amount: adjustData.amount, currency: adjustData.currency, category: `Ahorro a: ${selectedGoal.title}`, description: adjustData.description || 'Ajuste', goal_id: selectedGoal.id, date: tzDate });
       } else if (adjustType === 'spend') {
-        await financeService.createTransaction({ type: 'expense', amount: adjustData.amount, currency: adjustData.currency, category: 'Gasto de Meta', description: adjustData.description, goal_id: selectedGoal.id, date: tzDate });
+        await financeService.createTransaction({ type: 'expense', amount: adjustData.amount, currency: adjustData.currency, category: `Gasto de: ${selectedGoal.title}`, description: adjustData.description, goal_id: selectedGoal.id, date: tzDate });
       } else if (adjustType === 'remove') {
-        await financeService.createTransaction({ type: 'goal_withdrawal', amount: adjustData.amount, currency: adjustData.currency, category: 'Retiro de Meta', description: adjustData.description || `Retiro de reserva (${selectedGoal.title})`, goal_id: selectedGoal.id, date: tzDate });
+        await financeService.createTransaction({ type: 'goal_withdrawal', amount: adjustData.amount, currency: adjustData.currency, category: `Retiro de: ${selectedGoal.title}`, description: adjustData.description || `Retiro de reserva (${selectedGoal.title})`, goal_id: selectedGoal.id, date: tzDate });
       } else if (adjustType === 'redirect') {
         const rate = Number(rates[adjustData.currency]) || 1;
         const amountInUSD = adjustData.currency === 'USD' ? Number(adjustData.amount) : Number(adjustData.amount) / rate;

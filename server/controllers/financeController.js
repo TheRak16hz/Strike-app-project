@@ -259,7 +259,7 @@ exports.createTransaction = async (req, res) => {
 
       const updateOp = (type === 'income' || type === 'saving') ? '+' : '-';
       await db.query(
-        `UPDATE savings_goals SET current_amount = current_amount ${updateOp} $1 WHERE id = $2 AND user_id = $3`,
+        `UPDATE savings_goals SET current_amount = GREATEST(0, current_amount ${updateOp} $1) WHERE id = $2 AND user_id = $3`,
         [amountInUSD, goal_id, req.user.id]
       );
     }
@@ -305,7 +305,7 @@ exports.deleteTransaction = async (req, res) => {
 
       const amountToRevert = (trans.type === 'income' || trans.type === 'saving') ? -amountInUSD : amountInUSD;
       await db.query(
-        'UPDATE savings_goals SET current_amount = current_amount + $1 WHERE id = $2 AND user_id = $3',
+        'UPDATE savings_goals SET current_amount = GREATEST(0, current_amount + $1) WHERE id = $2 AND user_id = $3',
         [amountToRevert, trans.goal_id, req.user.id]
       );
     }
@@ -340,13 +340,13 @@ exports.updateTransaction = async (req, res) => {
     if (oldTx.goal_id) {
       const oldAmountInUSD = oldTx.currency === 'USD' ? oldTx.amount : oldTx.amount / (rates[oldTx.currency] || 1);
       const revertOp = (oldTx.type === 'income' || oldTx.type === 'saving') ? '-' : '+';
-      await db.query(`UPDATE savings_goals SET current_amount = current_amount ${revertOp} $1 WHERE id = $2`, [oldAmountInUSD, oldTx.goal_id]);
+      await db.query(`UPDATE savings_goals SET current_amount = GREATEST(0, current_amount ${revertOp} $1) WHERE id = $2`, [oldAmountInUSD, oldTx.goal_id]);
     }
 
     if (goal_id) {
       const newAmountInUSD = currency === 'USD' ? amount : amount / (rates[currency] || 1);
       const applyOp = (type === 'income' || type === 'saving') ? '+' : '-';
-      await db.query(`UPDATE savings_goals SET current_amount = current_amount ${applyOp} $1 WHERE id = $2`, [newAmountInUSD, goal_id]);
+      await db.query(`UPDATE savings_goals SET current_amount = GREATEST(0, current_amount ${applyOp} $1) WHERE id = $2`, [newAmountInUSD, goal_id]);
     }
 
     const updatedTx = await db.query(
