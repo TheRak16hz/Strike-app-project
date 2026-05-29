@@ -74,10 +74,10 @@ export default function SleepStats({ stats, settings, logs, onDelete }) {
                           const q = Number(log.quality) || 3;
                           const fillPercent = q >= star ? '100%' : (q === star - 0.5 ? '50%' : '0%');
                           return (
-                            <div key={star} style={{ position: 'relative', display: 'inline-block', width: '12px', height: '12px' }}>
-                              <Star size={12} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0 }} />
-                              <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, overflow: 'hidden' }}>
-                                <Star size={12} color="#f59e0b" fill="#f59e0b" />
+                            <div key={star} style={{ position: 'relative', display: 'flex', width: '12px', height: '12px' }}>
+                              <Star size={12} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0, display: 'block' }} />
+                              <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, height: '100%', overflow: 'hidden' }}>
+                                <Star size={12} color="#f59e0b" fill="#f59e0b" style={{ display: 'block' }} />
                               </div>
                             </div>
                           );

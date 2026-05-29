@@ -125,13 +125,13 @@ export default function SleepLogForm({ onLogSleep }) {
               {[1, 2, 3, 4, 5].map(star => {
                 const fillPercent = quality >= star ? '100%' : (quality === star - 0.5 ? '50%' : '0%');
                 return (
-                  <div key={star} style={{ position: 'relative', display: 'inline-block', width: '28px', height: '28px' }}>
+                  <div key={star} style={{ position: 'relative', display: 'flex', width: '28px', height: '28px' }}>
                     {/* Empty Background Star */}
-                    <Star size={28} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none' }} />
+                    <Star size={28} color="rgba(255,255,255,0.2)" fill="none" style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none', display: 'block' }} />
                     
                     {/* Filled Star with clipPath/width trick */}
-                    <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, overflow: 'hidden', pointerEvents: 'none' }}>
-                      <Star size={28} color="#f59e0b" fill="#f59e0b" />
+                    <div style={{ position: 'absolute', left: 0, top: 0, width: fillPercent, height: '100%', overflow: 'hidden', pointerEvents: 'none' }}>
+                      <Star size={28} color="#f59e0b" fill="#f59e0b" style={{ display: 'block' }} />
                     </div>
 
                     {/* Clickable areas for half and full */}
